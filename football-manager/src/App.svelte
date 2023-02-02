@@ -2,7 +2,7 @@
   import svelteLogo from "./assets/svelte.svg";
   import Counter from "./lib/Counter.svelte";
   import Footer from "./lib/Footer.svelte";
-  import Navbar from "./lib/Navbar.svelte";
+  import Navbar from "./lib/Header/Navbar.svelte";
 </script>
 
 <Navbar />

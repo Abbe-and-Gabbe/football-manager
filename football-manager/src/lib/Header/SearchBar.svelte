@@ -1,5 +1,5 @@
 <script>
-  import teams from "../assets/data";
+  import teams from "../../assets/data";
   import SearchResultsContainer from "./searchResultsContainer.svelte";
 
   // Change this in the future to fetch from the backend
