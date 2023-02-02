@@ -3,7 +3,7 @@
 
   // Change this in the future to fetch from the backend
   let res = teams;
-  let searchResults = [];
+  let searchResults = []; // Players might also be something that can be searched for?
 
   function search(e) {
     if (e.target.value === "") {
