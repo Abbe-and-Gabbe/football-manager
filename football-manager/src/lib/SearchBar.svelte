@@ -1,4 +1,4 @@
-<div class="flex justify-center p-8">
+<div class="flex justify-center p-8 bg-slate-300 dark:bg-slate-800 m-2 rounded-xl">
   <form class="w-1/2">
     <label
       for="default-search"
