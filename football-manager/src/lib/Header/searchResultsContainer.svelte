@@ -4,7 +4,7 @@
   <div
     id="searchResults"
     class:animate-slide-menu={searchResults.length > 0}
-    class="flex-col border border-slate-400 rounded-xl w-full animate-expand-in border-collapse m-auto"
+    class="flex-col border border-slate-400 rounded-xl w-1/2 animate-expand-in border-collapse m-auto"
   >
   <!-- The api will only return 5-10 results, so we can just show them all -->
     {#each searchResults as result}
