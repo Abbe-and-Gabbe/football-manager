@@ -1,8 +1,8 @@
 <script>
-  import NotifyButton from './NotifyButton.svelte';
+  import NotifyButton from "./NotifyButton.svelte";
 
   // This will be changed later when the backend is implemented
-  let loggedIn = true;
+  let loggedIn = false;
 </script>
 
 <div class="text-black dark:text-white p-8 flex">
@@ -13,11 +13,11 @@
         alt="userImg"
         class="w-7 h-7 rounded-full m-2"
       />
-      <NotifyButton/>
+      <NotifyButton />
     </div>
   {:else}
     <button
-      class="rounded bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 "
+      class="relative inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
       Login
     </button>
