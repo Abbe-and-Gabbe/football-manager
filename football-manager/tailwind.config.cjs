@@ -6,8 +6,8 @@ module.exports = {
             animation: {
                 // fade-in
                 "fade-in": "fade-in .5s ease-in-out",
-                "expand-in": "expand-in 2.5s ease-in-out",
-                "expand-out": "expand-out 2.5s ease-in-out",
+                "expand-in": "expand-in 1s ease-in-out",
+                "expand-out": "expand-out .5s ease-in-out",
                 "slide-menu": "slide-menu .5s ease-in-out",
             },
             keyframes: {

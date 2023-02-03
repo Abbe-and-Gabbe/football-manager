@@ -3,18 +3,22 @@
   import Counter from "./lib/Counter.svelte";
   import Footer from "./lib/Footer.svelte";
   import Navbar from "./lib/Header/Navbar.svelte";
+  import { Router, Link, Route } from "svelte-routing";
+
+  export let url = "";
 </script>
 
-<Navbar />
-<main class="dark:bg-slate-800 bg-slate-100 dark:text-white p-12 h-auto shadow-xl">
-  <!-- Fill this with content -->
-  <section class="prose dark:prose-invert my-2 bg-slate-600 rounded-xl p-2 w-full">
-    <h1>
-      Welcome to Football manager
-    </h1>
-  </section>
-  <section class="prose dark:prose-invert">
-    <Counter />
-  </section>
-</main>
-<Footer/>
+<Router {url}>
+  <Navbar />
+  <main
+    class="dark:bg-slate-800 bg-slate-100 dark:text-white p-12 shadow-xl prose"
+  >
+    <h1>Hello!</h1>
+  </main>
+</Router>
+<Footer />
+<div class="p-8 border my-10 mx-auto shadow-md max-w-2xl bg-white rounded-lg">
+  <div class="prose">
+    <h1>Hello world!</h1>
+  </div>
+</div>
