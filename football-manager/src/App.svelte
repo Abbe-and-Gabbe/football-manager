@@ -12,7 +12,7 @@
 <Router {url}>
   <Navbar />
   <main
-    class="dark:bg-slate-800 bg-slate-100 dark:text-white p-12 shadow-xl h-full"
+    class="dark:bg-slate-900 bg-slate-100 dark:text-white p-12 shadow-xl h-full"
   >
   <Route path="/" component={Home} />
   </main>
