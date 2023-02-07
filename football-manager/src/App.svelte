@@ -16,7 +16,9 @@
     class="dark:bg-slate-900 bg-slate-100 dark:text-white p-12 shadow-xl h-full"
   >
   <Route path="/" component={Home} />
-  <Route path="/team/:id" component={Team} />
+  <Route path="/team/:id" let:params>
+    <Team id="{params.id}" />
+  </Route>
   </main>
 </Router>
 <Footer />
