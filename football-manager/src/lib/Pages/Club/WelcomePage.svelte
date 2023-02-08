@@ -9,6 +9,4 @@
         <p>Underneath you can find some news about this club</p>
       </div>
     </div>
-  
-   
 </section>
