@@ -4,6 +4,7 @@ const teams = [{
         id: 1,
         name: "Arsenal",
         logo: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+        
     },
     {
         id: 2,
