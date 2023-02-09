@@ -1,4 +1,4 @@
-let cards = [
+let newsCards = [
     {
       id: 1,
       title: 'What is Lorem Ipsum?',
@@ -18,4 +18,4 @@ let cards = [
     // ...
   ];
 
-  export default cards;
+  export default newsCards;
