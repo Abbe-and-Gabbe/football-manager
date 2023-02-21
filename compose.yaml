@@ -5,3 +5,11 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/src/:/backend/src/
+  frontend:
+    build: ./football-manager/
+    ports: 
+      - "3030:5173"
+      - "24678:24678"
+    volumes:
+      - ./football-manager/src:/football-manager/src
+      - ./football-manager/public:/football-manager/public
