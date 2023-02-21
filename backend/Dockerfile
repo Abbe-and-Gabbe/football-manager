@@ -8,5 +8,5 @@ RUN npm install
 
 COPY ./src/ ./
 
-CMD node --watch /src/app.js
+CMD node --watch ./src/app.js
 
