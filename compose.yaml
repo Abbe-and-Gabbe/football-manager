@@ -1,4 +1,11 @@
 services:
+  db:
+    build: ./database/
+    ports:
+      - "5555:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: abc123
+      MARIADB_DATABASE: Football-ManagerDB
   backend:
     build: ./backend/
     ports:
