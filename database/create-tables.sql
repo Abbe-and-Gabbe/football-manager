@@ -5,3 +5,4 @@ CREATE TABLE humans (
 
 INSERT INTO humans (name) VALUES ('Alice');
 INSERT INTO humans (name) VALUES ('Bob');
+INSERT INTO humans (name) VALUES ('Gabriel');
