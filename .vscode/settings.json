@@ -8,7 +8,7 @@
             "server": "localhost",
             "port": 5555,
             "driver": "MariaDB",
-            "name": "Test",
+            "name": "FM DB",
             "database": "Football-ManagerDB",
             "username": "root"
         }
