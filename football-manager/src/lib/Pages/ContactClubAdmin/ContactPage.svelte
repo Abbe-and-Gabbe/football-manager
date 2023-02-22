@@ -1,12 +1,12 @@
 <script>
     export let id; 
-    import ContactPageNavbar from "./ContactPageNavbar.svelte";
+    import ClubNavBar from "../Club/clubNavBar.svelte";
     import CardForContactPage from "./CardForContactPage.svelte";
 
 </script>
 
 
-<ContactPageNavbar id = {id}/>
+<ClubNavBar id = {id}/>
 <CardForContactPage/>
 
 
