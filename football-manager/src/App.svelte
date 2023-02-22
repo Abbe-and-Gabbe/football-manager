@@ -6,7 +6,7 @@
   import { Router, Link, Route } from "svelte-routing";
   import Home from "./lib/Pages/Home.svelte";
   import Club from "./lib/Pages/Club/Club.svelte";
-  import ContactPage from "./lib/Pages/ContactClubAdmin/ContactPage.svelte";
+  import ContactPage from "./lib/Pages/Club/ContactClubAdmin/ContactPage.svelte";
   export let url = "";
 </script>
 

@@ -1,5 +1,5 @@
 <script>
-     import contactPersons from "../../../assets/contactPersonsData";
+     import contactPersons from "../../../../assets/contactPersonsData";
 </script>
 
 <section class="animate-fade-in flex-col mt-10">

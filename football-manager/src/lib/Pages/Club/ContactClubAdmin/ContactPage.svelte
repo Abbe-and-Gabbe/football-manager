@@ -1,6 +1,6 @@
 <script>
     export let id; 
-    import ClubNavBar from "../Club/clubNavBar.svelte";
+    import ClubNavBar from "../clubNavBar.svelte";
     import CardForContactPage from "./CardForContactPage.svelte";
 
 </script>
