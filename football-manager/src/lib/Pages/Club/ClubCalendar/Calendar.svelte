@@ -109,53 +109,23 @@
 <ClubNavBar {id} />
 
 <section class="animate-fade-in flex-col mt-10">
-  <div
-    class="bg-slate-500 dark:bg-slate-800 static justify-evenly flex-col p-4 md:p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in"
-  >
+  <div class="bg-slate-500 dark:bg-slate-800 static justify-evenly flex-col p-4 md:p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in">
     <h1 class="text-left mb-10 text-3xl">Club Calendar</h1>
 
     <!-- Arrow buttons for changing month -->
     <div class="flex items-center">
-      <button
-        class="text-white rounded-full bg-gray-400 hover:bg-gray-600 p-2"
-        on:click={() => handleArrowClick(-1)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
+      <button class="text-white rounded-full bg-gray-400 hover:bg-gray-600 p-2" on:click={() => handleArrowClick(-1)}>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
       </button>
       <div class="flex-grow mx-4 text-2xl text-center">
         {months[currentDate.getMonth()]}
         {currentDate.getFullYear()}
       </div>
-      <button
-        class="text-white rounded-full bg-gray-400 hover:bg-gray-600 p-2"
-        on:click={() => handleArrowClick(1)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
+      <button class="text-white rounded-full bg-gray-400 hover:bg-gray-600 p-2" on:click={() => handleArrowClick(1)}>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
       </button>
     </div>
@@ -163,18 +133,12 @@
     <!-- Calendar grid -->
     <div class="grid grid-cols-7 gap-2 mt-4">
       {#each weekdays as day}
-        <div
-          class="bg-slate-400 dark:bg-slate-700 py-2 rounded-xl text-white text-center font-bold"
-        >
+        <div class="bg-slate-400 dark:bg-slate-700 py-2 rounded-xl text-white text-center font-bold">
           {day}
         </div>
       {/each}
       {#each daysInCurrentMonth as day}
-        <div
-          class="bg-white dark:bg-gray-800 py-2 rounded-xl text-gray-800 dark:text-white text-center font-bold cursor-pointer transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-600"
-          class:selected={day === selectedDate}
-          on:click={() => handleDayClick(day)}
-        >
+        <div class="bg-white dark:bg-gray-800 py-2 rounded-xl text-gray-800 dark:text-white text-center font-bold cursor-pointer transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-600" class:selected={day === selectedDate} on:click={() => handleDayClick(day)}>
           {#if day !== null}
             <span class="text-sm">{day.getDate()}</span>
             {#each events.filter((event) => event.date.toDateString() === day.toDateString()) as event}
@@ -184,5 +148,9 @@
         </div>
       {/each}
     </div>
+
+  
+
   </div>
 </section>
+
