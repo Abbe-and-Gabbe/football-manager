@@ -726,3 +726,124 @@ VALUES
   ("Leroy","Boone","l.boone@aol.edu","M","(163) 221-1028","ipsum"),
   ("Allistair","Pugh","a-pugh6490@yahoo.couk","M","(333) 364-2726","feugiat"),
   ("Garrison","Donaldson","g-donaldson@protonmail.com","M","(424) 378-3037","Curabitur");
+-- Players
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (416,3),
+  (247,5),
+  (32,5),
+  (281,2),
+  (306,7),
+  (77,7),
+  (346,7),
+  (489,3),
+  (308,7),
+  (338,8);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (472,2),
+  (320,6),
+  (155,3),
+  (32,7),
+  (431,4),
+  (452,1),
+  (449,3),
+  (490,8),
+  (123,4),
+  (274,3);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (496,2),
+  (364,6),
+  (267,2),
+  (487,7),
+  (152,5),
+  (495,3),
+  (316,3),
+  (215,7),
+  (230,4),
+  (141,1);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (394,2),
+  (427,3),
+  (19,3),
+  (241,5),
+  (191,8),
+  (336,4),
+  (162,4),
+  (495,3),
+  (185,7),
+  (458,5);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (425,5),
+  (260,5),
+  (286,5),
+  (143,3),
+  (45,4),
+  (73,8),
+  (303,7),
+  (147,2),
+  (57,9),
+  (281,8);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (157,5),
+  (418,6),
+  (350,4),
+  (470,3),
+  (414,3),
+  (362,1),
+  (491,8),
+  (282,6),
+  (475,7),
+  (217,5);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (281,2),
+  (493,2),
+  (425,7),
+  (271,3),
+  (454,4),
+  (312,8),
+  (173,9),
+  (109,2),
+  (305,3),
+  (283,4);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (438,6),
+  (7,1),
+  (49,2),
+  (112,1),
+  (132,3),
+  (454,9),
+  (191,2),
+  (166,6),
+  (485,1),
+  (78,6);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (89,5),
+  (111,8),
+  (113,4),
+  (83,2),
+  (69,2),
+  (436,6),
+  (149,2),
+  (486,5),
+  (60,2),
+  (463,2);
+INSERT INTO Person (PersonId,TeamId)
+VALUES
+  (85,6),
+  (156,7),
+  (400,2),
+  (187,3),
+  (222,6),
+  (58,5),
+  (39,7),
+  (448,1),
+  (372,5),
+  (236,4);
