@@ -1,8 +1,7 @@
 <script>
   export let id;
-  import DtNavbar from "./DTNavbar.svelte";
   import DisplayAllTeams from "./DisplayAllTeams.svelte";
-  import ClubNavBar from "../Club/clubNavBar.svelte";
+  import ClubNavBar from "../clubNavBar.svelte";
 
 </script>
 

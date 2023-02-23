@@ -1,5 +1,5 @@
 <script>
-      import teamsData from "../../../assets/TeamsData";
+      import teamsData from "../../../../assets/TeamsData";
 </script>
 
 <section class="animate-fade-in flex-col mt-10">
