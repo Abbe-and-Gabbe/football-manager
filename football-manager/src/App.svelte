@@ -7,6 +7,7 @@
   import Home from "./lib/Pages/Home.svelte";
   import Club from "./lib/Pages/Club/Club.svelte";
   import Teams from "./lib/Pages/Club/DisplayTeams/Teams.svelte";
+  import ContactPage from "./lib/Pages/Club/ContactClubAdmin/ContactPage.svelte";
   export let url = "";
 </script>
 
@@ -21,6 +22,10 @@
   </Route>
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>
+
+  <Route path="/club/:id/contact" let:params> 
+    <ContactPage id="{params.id}"/>
+
   </Route>
   </main>
 </Router>
