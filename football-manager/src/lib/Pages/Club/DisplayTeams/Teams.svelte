@@ -6,5 +6,5 @@
 </script>
 
 <ClubNavBar {id} />
-<DisplayAllTeams/>
+<DisplayAllTeams />
 
