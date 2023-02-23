@@ -20,8 +20,10 @@
   <Route path="/club/:id" let:params>
     <Club id="{params.id}" />
   </Route>
+  
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>
+  </Route>
 
   <Route path="/club/:id/contact" let:params> 
     <ContactPage id="{params.id}"/>
