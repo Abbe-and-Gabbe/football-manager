@@ -189,7 +189,7 @@ VALUES (1, 1),
 	   (5, 5);
 
 -- Insert test data into League table
-INSERT INTO League (id, name, federation)
+INSERT INTO League (id, leagueName, federation)
 VALUES (1, 'Premier League', 'FA'),
 	   (2, 'Championship', 'FA'),
 	   (3, 'League One', 'FA'),
@@ -210,7 +210,7 @@ VALUES (1, 1, 1, 2, 2, 1, '2023-03-01 10:00:00'),
 	   (10, 1, 5, 1, 2, 1, '2023-03-03 16:00:00');
 
 -- Insert test data into PlayerGame table
-INSERT INTO PlayerGame (PersonId, GameId, goals, assists, yellowCards, redCards)
+INSERT INTO PlayerGame (PersonId, GameId, goals, assist, yellowCard, redCard)
 VALUES (1, 1, 1, 0, 0, 0),
 	   (2, 1, 0, 1, 0, 0),
 	   (3, 1, 1, 0, 0, 0),
