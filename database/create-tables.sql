@@ -113,3 +113,64 @@ ALTER TABLE News ADD FOREIGN KEY (TeamId) REFERENCES Team (id);
 ALTER TABLE GameSummary ADD FOREIGN KEY (GameId) REFERENCES Game (id);
 
 ALTER TABLE GameSummary ADD FOREIGN KEY (PersonId) REFERENCES Person (id);
+
+-- Insert test data into Person table
+INSERT INTO Person (id, firstName, lastName, email, gender, phoneNumber, password)
+VALUES (1, 'John', 'Doe', 'johndoe@example.com', 'Male', '555-1234', 'password'),
+       (2, 'Jane', 'Doe', 'janedoe@example.com', 'Female', '555-5678', 'password'),
+       (3, 'Bob', 'Smith', 'bobsmith@example.com', 'Male', '555-2468', 'password'),
+       (4, 'Samantha', 'Johnson', 'samanthajohnson@example.com', 'Female', '555-3690', 'password'),
+       (5, 'James', 'Williams', 'jameswilliams@example.com', 'Male', '555-1357', 'password');
+
+-- Insert test data into Club table
+INSERT INTO Club (id, name)
+VALUES (1, 'Manchester United'),
+       (2, 'Chelsea'),
+       (3, 'Arsenal');
+
+-- Insert test data into Team table
+INSERT INTO Team (id, clubId, teamName)
+VALUES (1, 1, 'Manchester United A'),
+       (2, 1, 'Manchester United B'),
+       (3, 2, 'Chelsea A'),
+       (4, 2, 'Chelsea B'),
+       (5, 3, 'Arsenal A');
+
+-- Insert test data into TeamStaff table
+INSERT INTO TeamStaff (PersonId, TeamId, role)
+VALUES (1, 1, 'Head Coach'),
+       (2, 1, 'Assistant Coach'),
+       (3, 2, 'Head Coach'),
+       (4, 2, 'Assistant Coach'),
+       (5, 3, 'Head Coach'),
+       (1, 3, 'Physiotherapist'),
+       (2, 3, 'Fitness Coach'),
+       (3, 4, 'Physiotherapist'),
+       (4, 4, 'Fitness Coach'),
+       (5, 5, 'Head Coach');
+
+-- Insert test data into TeamPlayer table
+INSERT INTO TeamPlayer (PersonId, TeamId)
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 2),
+       (5, 3),
+       (1, 3),
+       (2, 3),
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
+-- Insert test data into Training table
+INSERT INTO Training (id, TeamId, date)
+VALUES (1, 1, '2023-03-01 10:00:00'),
+       (2, 1, '2023-03-03 10:00:00'),
+       (3, 2, '2023-03-02 10:00:00'),
+       (4, 2, '2023-03-04 10:00:00'),
+       (5, 3, '2023-03-01 14:00:00'),
+       (6, 3, '2023-03-03 14:00:00'),
+       (7, 4, '2023-03-02 14:00:00'),
+       (8, 4, '2023-03-04 14:00:00'),
+       (9, 5, '2023-03-01 16:00:00'),
+       (10, 5, '2023-03-03 16:00:00');
