@@ -174,3 +174,97 @@ VALUES (1, 1, '2023-03-01 10:00:00'),
        (8, 4, '2023-03-04 14:00:00'),
        (9, 5, '2023-03-01 16:00:00'),
        (10, 5, '2023-03-03 16:00:00');
+
+-- Insert test data into PlayerTraining table
+INSERT INTO PlayerTraining (PersonId, TrainingId)
+VALUES (1, 1),
+	   (2, 1),
+	   (3, 1),
+	   (4, 2),
+	   (5, 3),
+	   (1, 3),
+	   (2, 3),
+	   (3, 3),
+	   (4, 4),
+	   (5, 5);
+
+-- Insert test data into League table
+INSERT INTO League (id, name, federation)
+VALUES (1, 'Premier League', 'FA'),
+	   (2, 'Championship', 'FA'),
+	   (3, 'League One', 'FA'),
+	   (4, 'League Two', 'FA'),
+	   (5, 'National League', 'FA');
+
+-- Insert test data into Game table
+INSERT INTO Game (id, LeagueId, homeTeam, awayTeam, homeScore, awayScore, date)
+VALUES (1, 1, 1, 2, 2, 1, '2023-03-01 10:00:00'),
+	   (2, 1, 1, 2, 2, 1, '2023-03-03 10:00:00'),
+	   (3, 1, 2, 1, 1, 2, '2023-03-02 10:00:00'),
+	   (4, 1, 2, 1, 1, 2, '2023-03-04 10:00:00'),
+	   (5, 1, 3, 4, 2, 1, '2023-03-01 14:00:00'),
+	   (6, 1, 3, 4, 2, 1, '2023-03-03 14:00:00'),
+	   (7, 1, 4, 3, 1, 2, '2023-03-02 14:00:00'),
+	   (8, 1, 4, 3, 1, 2, '2023-03-04 14:00:00'),
+	   (9, 1, 5, 1, 2, 1, '2023-03-01 16:00:00'),
+	   (10, 1, 5, 1, 2, 1, '2023-03-03 16:00:00');
+
+-- Insert test data into PlayerGame table
+INSERT INTO PlayerGame (PersonId, GameId, goals, assists, yellowCards, redCards)
+VALUES (1, 1, 1, 0, 0, 0),
+	   (2, 1, 0, 1, 0, 0),
+	   (3, 1, 1, 0, 0, 0),
+	   (4, 2, 0, 0, 1, 0),
+	   (5, 3, 0, 0, 0, 1),
+	   (1, 3, 0, 0, 0, 1),
+	   (2, 3, 0, 0, 0, 1),
+	   (3, 3, 0, 0, 0, 1),
+	   (4, 4, 0, 0, 0, 1),
+	   (5, 5, 0, 0, 0, 1),
+	   (1, 5, 0, 0, 0, 1),
+	   (2, 5, 0, 0, 0, 1),
+	   (3, 5, 0, 0, 0, 1),
+	   (4, 6, 0, 0, 0, 1),
+	   (5, 7, 0, 0, 0, 1),
+	   (1, 7, 0, 0, 0, 1),
+	   (2, 7, 0, 0, 0, 1),
+	   (3, 7, 0, 0, 0, 1),
+	   (4, 8, 0, 0, 0, 1),
+	   (5, 9, 0, 0, 0, 1),
+	   (1, 9, 0, 0, 0, 1),
+	   (2, 9, 0, 0, 0, 1),
+	   (3, 9, 0, 0, 0, 1),
+	   (4, 10, 0, 0, 0, 1),
+	   (5, 10, 0, 0, 0, 1);
+
+-- Insert test data into GameSummary table
+INSERT INTO GameSummary (GameId, PersonId, content)
+VALUES (1, 1, 'Game 1 summary'),
+	   (2, 1, 'Game 2 summary'),
+	   (3, 1, 'Game 3 summary'),
+	   (4, 1, 'Game 4 summary'),
+	   (5, 1, 'Game 5 summary'),
+	   (6, 1, 'Game 6 summary'),
+	   (7, 1, 'Game 7 summary'),
+	   (8, 1, 'Game 8 summary'),
+	   (9, 1, 'Game 9 summary'),
+	   (10, 1, 'Game 10 summary');
+
+-- Insert test data into News table
+INSERT INTO News (PersonId, TeamId, title, content, published)
+VALUES (1, 1, 'News 1', 'News 1 content', '2023-03-01 10:00:00'),
+	   (2, 1, 'News 2', 'News 2 content', '2023-03-03 10:00:00'),
+	   (3, 2, 'News 3', 'News 3 content', '2023-03-02 10:00:00'),
+	   (4, 2, 'News 4', 'News 4 content', '2023-03-04 10:00:00'),
+	   (5, 3, 'News 5', 'News 5 content', '2023-03-01 14:00:00'),
+	   (1, 3, 'News 6', 'News 6 content', '2023-03-03 14:00:00'),
+	   (2, 4, 'News 7', 'News 7 content', '2023-03-02 14:00:00'),
+	   (3, 4, 'News 8', 'News 8 content', '2023-03-04 14:00:00'),
+	   (4, 5, 'News 9', 'News 9 content', '2023-03-01 16:00:00'),
+	   (5, 5, 'News 10', 'News 10 content', '2023-03-03 16:00:00');
+
+
+
+
+
+
