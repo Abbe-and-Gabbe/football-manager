@@ -48,7 +48,7 @@ app.get("/person/:id", async (req, res) => {
 
         // Get the teams where the person is a staff member
         const staffTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId FROM Team
+                        SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role FROM Team
                         JOIN TeamStaff ON Team.id = TeamStaff.teamId
                         JOIN Club ON Team.clubId = Club.id
                         WHERE TeamStaff.PersonId = ?
