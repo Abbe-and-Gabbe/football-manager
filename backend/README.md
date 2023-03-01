@@ -11,7 +11,9 @@ The backend is using express.js, and can be run with `npm start`, or with `docke
 
 Returns a person with the given id.
 
-If the person exists, the response will be a 200 with the person in the body. If the person does not exist, the response will be a 404. Else it fails, the response will be a 500.
+- Success: 200
+- Not found: 404
+- Error: 500
 
 The data will be retuned in the following format:
 
@@ -50,5 +52,14 @@ The data will be retuned in the following format:
             "role": "Physiotherapist"
         }
     ]
+}
+```
+
+If the person is not found, the following will be returned:
+
+```json
+{
+    "errorCode": "not_found",
+    "message": "Person not found"
 }
 ```

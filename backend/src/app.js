@@ -60,7 +60,10 @@ app.get("/person/:id", async (req, res) => {
         connection.release();
         res.send(data);
     } catch (err) {
-        console.log(err);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found"
+        })
     }
 });
 
