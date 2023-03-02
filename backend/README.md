@@ -63,3 +63,38 @@ If the person is not found, the following will be returned:
     "message": "Person not found"
 }
 ```
+
+### GET /team/:id
+
+Returns a team with the given id, including all players and staff.
+
+- Success: 200
+- Not found: 404
+- Error: 500
+
+The response will look like this:
+
+```json
+{
+    "id": 1,
+    "teamName": "Manchester United A",
+    "clubName": "Manchester United",
+    "clubId": 1,
+    "players": [
+        {
+            "id": 1,
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "mail@mail.com"
+        },
+    ],
+    "staff": [
+        {
+            "id": 1,
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": ""
+        }
+    ]
+}
+```
