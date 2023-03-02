@@ -10,7 +10,7 @@ CREATE TABLE Person (
 
 CREATE TABLE Club (
   id int PRIMARY KEY,
-  name varchar(255)
+  clubName varchar(255)
 );
 
 CREATE TABLE Team (
@@ -123,7 +123,7 @@ VALUES (1, 'John', 'Doe', 'johndoe@example.com', 'Male', '555-1234', 'password')
        (5, 'James', 'Williams', 'jameswilliams@example.com', 'Male', '555-1357', 'password');
 
 -- Insert test data into Club table
-INSERT INTO Club (id, name)
+INSERT INTO Club (id, clubName)
 VALUES (1, 'Manchester United'),
        (2, 'Chelsea'),
        (3, 'Arsenal');

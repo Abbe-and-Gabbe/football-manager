@@ -36,7 +36,7 @@ app.get("/person/:id", async (req, res) => {
         data.password = "*********";
         // Select the teams the person is in
         const playerTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId FROM Team 
+                        SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team 
                         JOIN TeamPlayer ON Team.id = TeamPlayer.teamId 
                         JOIN Club ON Team.clubId = Club.id
                         WHERE TeamPlayer.PersonId = ?
@@ -48,7 +48,7 @@ app.get("/person/:id", async (req, res) => {
 
         // Get the teams where the person is a staff member
         const staffTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role FROM Team
+                        SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
                         JOIN TeamStaff ON Team.id = TeamStaff.teamId
                         JOIN Club ON Team.clubId = Club.id
                         WHERE TeamStaff.PersonId = ?
