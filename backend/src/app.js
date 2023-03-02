@@ -1,5 +1,7 @@
 import express from "express";
 import { createPool } from "mariadb";
+
+// Route imports
 import personRouter from "./routes/person.js";
 
 const PORT = 8080;
