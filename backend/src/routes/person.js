@@ -38,6 +38,7 @@ export default router.get("/:id", async (req, res) => {
         connection.release();
         res.send(data);
     } catch (err) {
+        res.status(404);
         res.send({
             errorCode: "not_found",
             errorMessage: "Person not found"
