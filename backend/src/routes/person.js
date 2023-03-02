@@ -1,8 +1,9 @@
-import express from "express"
-const router = express.Router()
+import { Router } from "express";
 import { pool } from "../db.js"
 
-export default router.get("/:id", async (req, res) => {
+const router = Router();
+
+router.get("/:id", async (req, res) => {
     let data = {}
     console.log("Get person with id: " + req.params.id);
     try {
@@ -45,3 +46,24 @@ export default router.get("/:id", async (req, res) => {
         })
     }
 });
+
+router.get("/", async (req, res) => {
+    let data = {}
+    console.log("Get all persons");
+    try {
+        const connection = await pool.getConnection();
+        const query = "SELECT * FROM Person";
+        const persons = await connection.query(query);
+        data = persons;
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Persons not found"
+        })
+    }
+});
+
+export default router;
