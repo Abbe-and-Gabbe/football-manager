@@ -87,14 +87,17 @@ The response will look like this:
             "lastName": "Doe",
             "email": "mail@mail.com"
         },
+        {...}
     ],
     "staff": [
         {
             "id": 1,
             "firstName": "John",
             "lastName": "Doe",
-            "email": ""
-        }
+            "email": "",
+            "role": "Head Coach"
+        }, 
+        {...}
     ]
 }
 ```
