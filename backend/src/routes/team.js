@@ -3,9 +3,31 @@ import { pool } from "../db.js"
 
 const router = Router();
 
+// Get all teams
+router.get("/", async (req, res) => {
+    console.log("Test")
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+        SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team
+        JOIN Club ON Team.clubId = Club.id
+        `;
+
+        data = await connection.query(query);
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Teams not found"
+        })
+    }
+});
+
 // Returns the team with the given id, the data is joined with the persons
 // connected to the team, players and staff.
-
 
 router.get("/:id", async (req, res) => {
     let data = {}
