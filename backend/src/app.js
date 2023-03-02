@@ -3,6 +3,7 @@ import { createPool } from "mariadb";
 
 // Route imports
 import personRouter from "./routes/person.js";
+import teamRouter from "./routes/team.js";
 
 const PORT = 8080;
 
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/person", personRouter);
+app.use("/team", teamRouter)
 
 
 app.listen(PORT, () => {

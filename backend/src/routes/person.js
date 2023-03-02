@@ -3,6 +3,9 @@ import { pool } from "../db.js"
 
 const router = Router();
 
+// Return a person with the given id, the data is joined with the teams
+// where the person has a role, both player and staff roles. 
+
 router.get("/:id", async (req, res) => {
     let data = {}
     console.log("Get person with id: " + req.params.id);
@@ -46,6 +49,11 @@ router.get("/:id", async (req, res) => {
         })
     }
 });
+
+
+
+// Gets all persons from the database, no joins are made
+// This will probably only be useful for admins
 
 router.get("/", async (req, res) => {
     let data = {}
