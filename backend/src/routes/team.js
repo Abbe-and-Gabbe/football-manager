@@ -79,5 +79,35 @@ router.get("/:id/players", async (req, res) => {
     }
 });
 
+// Returns all the staff in the team with the given id
+
+router.get("/:id/staff", async (req, res) => {
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            SELECT * FROM Person
+            JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+            WHERE TeamStaff.TeamId = ?
+        `;
+
+        data = await connection.query(query, [req.params.id]);
+        // Hide all passwords
+
+        data.forEach(person => {
+            person.password = "*********";
+        });
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+
 
 export default router;
