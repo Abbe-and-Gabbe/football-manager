@@ -80,6 +80,7 @@ router.get("/:id/players", async (req, res) => {
 });
 
 // Returns all the staff in the team with the given id
+// TODO: Add documentation
 
 router.get("/:id/staff", async (req, res) => {
     let data = {}
@@ -98,6 +99,30 @@ router.get("/:id/staff", async (req, res) => {
             person.password = "*********";
         });
 
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+
+// Returns all the news items for the team with the given id
+// TODO: Add documentation
+
+router.get("/:id/news", async (req, res) => {
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            SELECT News.id, News.title, News.content, News.published, Person.firstName, Person.lastName, Person.id AS "PersonId" FROM News
+            JOIN Person ON News.PersonId = Person.id
+            WHERE News.TeamId = ?
+        `;
+        data = await connection.query(query, [req.params.id]);
         connection.release();
         res.send(data);
     } catch (err) {
