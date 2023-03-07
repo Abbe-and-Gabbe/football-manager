@@ -114,6 +114,15 @@ router.get("/:id/staff", async (req, res) => {
 // TODO: Add documentation
 
 router.get("/:id/news", async (req, res) => {
+
+    // Try to parse the limit parameter, if it is not a number, set it to 10
+    let limit = parseInt(req.query.limit);
+    if (isNaN(limit)) {
+        limit = 10;
+    }
+
+
+    console.log(limit);
     let data = {}
     try {
         const connection = await pool.getConnection();
@@ -121,8 +130,10 @@ router.get("/:id/news", async (req, res) => {
             SELECT News.id, News.title, News.content, News.published, Person.firstName, Person.lastName, Person.id AS "PersonId" FROM News
             JOIN Person ON News.PersonId = Person.id
             WHERE News.TeamId = ?
+            ORDER BY News.published DESC
+            LIMIT ?
         `;
-        data = await connection.query(query, [req.params.id]);
+        data = await connection.query(query, [req.params.id, limit]);
         connection.release();
         res.send(data);
     } catch (err) {
