@@ -5,12 +5,13 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
-    },
+     },
     "type": "module",
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "express": "^4.18.2"
+        "express": "^4.18.2",
+        "mariadb": "^3.1.0"
     }
 }
