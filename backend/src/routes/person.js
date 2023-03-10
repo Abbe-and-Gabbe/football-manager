@@ -3,6 +3,38 @@ import { pool } from "../db.js"
 
 const router = Router();
 
+// Get the news for every team the person is in
+// id is the id of the person logged in
+
+router.get("/news", async(req, res) => {
+    let id = 1
+    let data = {}
+    console.log("Get news for person with id: " + id);
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+                        SELECT n.id, n.personId, n.title, n.content, n.published, n.teamId, Person.firstName, Person.lastName FROM News as n
+                        JOIN TeamPlayer ON n.teamId = TeamPlayer.teamId
+                        JOIN TeamStaff ON n.teamId = TeamStaff.teamId
+                        JOIN Person ON n.personId = Person.id
+                        WHERE TeamPlayer.personId = ?
+                        OR TeamStaff.personId = ?
+                        GROUP BY n.id
+                        `
+        const news = await connection.query(query, [1, 1]);
+        data = news;
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found"
+        })
+    }
+});
+
+
 // Return a person with the given id, the data is joined with the teams
 // where the person has a role, both player and staff roles. 
 
@@ -39,35 +71,6 @@ router.get("/:id", async(req, res) => {
 
         data.staffTeams = staffTeams;
 
-        connection.release();
-        res.send(data);
-    } catch (err) {
-        res.status(404);
-        res.send({
-            errorCode: "not_found",
-            errorMessage: "Person not found"
-        })
-    }
-});
-
-// Get the news for every team the person is in
-
-router.get("/:id/news", async(req, res) => {
-    let data = {}
-    console.log("Get news for person with id: " + req.params.id);
-    try {
-        const connection = await pool.getConnection();
-        const query = `
-                        SELECT n.id, n.personId, n.title, n.content, n.published, n.teamId, Person.firstName, Person.lastName FROM News as n
-                        JOIN TeamPlayer ON n.teamId = TeamPlayer.teamId
-                        JOIN TeamStaff ON n.teamId = TeamStaff.teamId
-                        JOIN Person ON n.personId = Person.id
-                        WHERE TeamPlayer.personId = ?
-                        OR TeamStaff.personId = ?
-                        GROUP BY n.id
-                        `
-        const news = await connection.query(query, [req.params.id, req.params.id]);
-        data = news;
         connection.release();
         res.send(data);
     } catch (err) {
