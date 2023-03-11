@@ -1,21 +1,25 @@
 <script>
-  import teams from "../../assets/data";
   import SearchResultsContainer from "./searchResultsContainer.svelte";
 
-  // Change this in the future to fetch from the backend
-  let res = teams;
-  let searchResults = []; // Players might also be something that can be searched for?
+  let searchResults = [];
 
-  function search(e) {
-    if (e.target.value === "") {
+  function search(event) {
+    if (event.target.value === "") {
       searchResults = [];
       return;
     }
-    searchResults = res.filter((item) => {
-      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
-    });
+    fetch("http://localhost:8080/team/:id")
+      .then(response => response.json())
+      .then(data => {
+        searchResults = data;
+      })
+      .catch(error => {
+        console.error(error);
+        searchResults = [];
+      });
   }
 </script>
+
 
 <div
   class="grid gap-6 grid-flow-row p-4 bg-slate-300 dark:bg-slate-800  rounded-xl"
