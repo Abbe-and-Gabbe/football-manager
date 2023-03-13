@@ -112,9 +112,9 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json(result);
+        res.json("Clubb added successfully");
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
 });
 
