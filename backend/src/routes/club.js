@@ -104,9 +104,18 @@ router.get("/:id/activities", async (req, res) => {
     }
 });
 
+// Add new club
 
-
-
-
+router.post("/", async (req, res) => {
+    let clubName = req.query.clubName.toString();
+    try {
+        const conn = await pool.getConnection();
+        const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
+        console.log(result);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 export default router;
