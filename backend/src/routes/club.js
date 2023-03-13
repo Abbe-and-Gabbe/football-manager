@@ -41,7 +41,7 @@ router.get("/:id/news", async (req, res) => {
             JOIN News ON Team.id = News.teamId
             JOIN Person ON Person.id = News.personId
             WHERE Team.clubId = ?
-            GROUP BY News.id
+            ORDER BY published DESC
         `, [req.params.id]);
         res.json(news);
     } catch (err) {
