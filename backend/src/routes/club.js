@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
         const clubs = await conn.query("SELECT * FROM Club");
         res.json(clubs);
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ message: err.message });
     }
 });
 
@@ -27,7 +27,25 @@ router.get("/:id", async (req, res) => {
         data.teams = teams;
         res.json(data);
     } catch (err) {
-        console.log(err);
+        res.status(500).json({ message: err.message, errorCode: err.errno });
+    }
+});
+
+// Get the news for all the teams in a club
+
+router.get("/:id/news", async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const news = await conn.query(`
+            SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+            JOIN News ON Team.id = News.teamId
+            JOIN Person ON Person.id = News.personId
+            WHERE Team.clubId = ?
+            GROUP BY News.id
+        `, [req.params.id]);
+        res.json(news);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
 
