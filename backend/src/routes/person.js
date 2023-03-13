@@ -6,8 +6,8 @@ const router = Router();
 // Get the news for every team the person is in
 // id is the id of the person logged in
 
-router.get("/news", async(req, res) => {
-    let id = 1
+router.get("/:id/news", async(req, res) => {
+    let id = req.params.id;
     let data = {}
     console.log("Get news for person with id: " + id);
     try {
@@ -21,7 +21,7 @@ router.get("/news", async(req, res) => {
                         OR TeamStaff.personId = ?
                         GROUP BY n.id
                         `
-        const news = await connection.query(query, [1, 1]);
+        const news = await connection.query(query, [id, id]);
         data = news;
         connection.release();
         res.send(data);
