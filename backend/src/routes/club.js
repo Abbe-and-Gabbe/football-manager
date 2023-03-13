@@ -49,6 +49,45 @@ router.get("/:id/news", async (req, res) => {
     }
 });
 
+// Get the upcoming matches for all the teams in a club
+
+router.get("/:id/games", async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const games = await conn.query(`
+            SELECT * FROM Game
+            WHERE (homeTeam IN (SELECT id FROM Team WHERE clubId = ?) OR awayTeam IN (SELECT id FROM Team WHERE clubId = ?))
+            ORDER BY date ASC
+        `, [req.params.id, req.params.id]);
+        const homeTeam = await conn.query(`
+            SELECT id, teamName FROM Team
+            WHERE clubId = ?
+        `, [req.params.id]);
+        const awayTeam = await conn.query(`
+
+            SELECT id, teamName FROM Team
+            WHERE clubId = ?
+        `, [req.params.id]);
+        games.forEach(game => {
+            homeTeam.forEach(team => {
+                if (game.homeTeam === team.id) {
+                    game.homeTeam = team.teamName;
+                }
+            });
+            awayTeam.forEach(team => {
+                if (game.awayTeam === team.id) {
+                    game.awayTeam = team.teamName;
+                }
+            });
+        });
+
+        res.json(games);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 
 
 
