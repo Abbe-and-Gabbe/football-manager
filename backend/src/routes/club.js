@@ -87,6 +87,24 @@ router.get("/:id/games", async (req, res) => {
     }
 });
 
+// Get upcoming activities for all the teams in a club
+
+router.get("/:id/activities", async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const activities = await conn.query(`
+            SELECT teamId, date, Team.teamName FROM Training
+            JOIN Team ON Team.id = Training.teamId
+            ORDER BY date ASC
+        `, [req.params.id]);
+
+        res.json(activities);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 
 
 
