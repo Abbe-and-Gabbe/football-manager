@@ -23,7 +23,7 @@
         return res.json()
     }).then((data) => {
         news = data.news
-        console.log(data)
+      
 
     })
 
