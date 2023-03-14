@@ -1,24 +1,39 @@
 <script>
     export let id;
-    import teams from "../../../assets/data";
     import WelcomePage from "./WelcomePage.svelte";
     import ClubNavBar from "./clubNavBar.svelte";
 
     import ClubCardContent from "./clubCardContent.svelte";
     let club
+    let news
 
     let f = fetch(`http://localhost:8080/club/${id}`)
     f.then((res) => {
         return res.json()
     }).then((data) => {
         club = data.club
-        console.log(club)
     })
+
+    
+
+
+
+    let n = fetch(`http://localhost:8080/club/${id}/news`)
+    n.then((res) => {
+        return res.json()
+    }).then((data) => {
+        news = data.news
+        console.log(data)
+
+    })
+
 
 </script>
 
 <ClubNavBar {id} />
 {#if club}
-<WelcomePage club={club} />
+    <WelcomePage club={club} />
 {/if}
-<ClubCardContent />
+{#if news}
+    <ClubCardContent news={news}  />
+{/if}
