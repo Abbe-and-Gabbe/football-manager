@@ -3,6 +3,8 @@
 
   let searchResults = [];
 
+  // This should later be handled by the SDK
+
   async function search(e) {
     const searchQuery = e.target.value;
 
