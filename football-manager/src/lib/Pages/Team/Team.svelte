@@ -10,9 +10,9 @@
         return res.json()
     }).then((data) => {
         team = data
-        console.log(data)
     })
 </script>
 
+<!-- Team name -->
 <TeamNavbar id={id}/>
 <TeamNews id={id} />
