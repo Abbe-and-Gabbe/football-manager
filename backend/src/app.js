@@ -1,6 +1,5 @@
 import express from "express";
-import { createPool } from "mariadb";
-
+import cors from "cors";
 // Route imports
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
@@ -9,6 +8,8 @@ import clubRouter from "./routes/club.js";
 const PORT = 8080;
 
 const app = express();
+
+app.use(cors());
 
 app.get("/", (req, res) => {
     res.send("Hello World!");

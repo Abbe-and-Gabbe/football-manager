@@ -6,11 +6,14 @@ const router = Router();
 // Returns all the clubs
 
 router.get("/", async (req, res) => {
+    console.log("GET /club");
     try {
         const conn = await pool.getConnection();
         const clubs = await conn.query("SELECT * FROM Club");
+        console.log(clubs);
         res.json(clubs);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 });
