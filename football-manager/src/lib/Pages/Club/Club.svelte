@@ -14,7 +14,7 @@
         club = data.club
     })
 
-    let n = fetch(`http://localhost:8080/club/${id}/games`)
+    let n = fetch(`http://localhost:8080/club/${id}/news`)
     n.then((res) => {
         return res.json()
     }).then((data) => {

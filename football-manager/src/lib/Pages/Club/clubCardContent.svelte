@@ -13,8 +13,8 @@
     <div class="container mx-auto p-4">
         <div class="flex items-center justify-center">
         <div class="p-4 bg-black rounded-lg shadow-md" >
-            <h2>{news.homeTeam}</h2>
-            <p>{news.awayTeam}</p>
+            <h2>{news.title}</h2>
+            <p>{news.content}</p>
         </div>
         </div>
       
