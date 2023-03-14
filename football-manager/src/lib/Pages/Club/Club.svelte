@@ -14,14 +14,19 @@
         club = data.club
     })
 
+    
+
+
+
     let n = fetch(`http://localhost:8080/club/${id}/news`)
     n.then((res) => {
         return res.json()
     }).then((data) => {
         news = data.news
-        console.log(news)
+        console.log(data)
 
     })
+
 
 </script>
 
@@ -30,5 +35,5 @@
     <WelcomePage club={club} />
 {/if}
 {#if news}
-    <ClubCardContent news={news} />
+    <ClubCardContent news={news}  />
 {/if}

@@ -49,8 +49,10 @@ router.get("/:id/news", async (req, res) => {
             WHERE Team.clubId = ?
             ORDER BY published DESC
         `, [req.params.id]);
+        console.log(news)
         res.json(news);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: err.message });
     }
 });
