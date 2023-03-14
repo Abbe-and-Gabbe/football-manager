@@ -1,31 +1,29 @@
 <script>
-  import teams from "../../assets/data";
   import SearchResultsContainer from "./searchResultsContainer.svelte";
 
-  // Change this in the future to fetch from the backend
-  let res = teams;
-  let searchResults = []; // Players might also be something that can be searched for?
+  const fetchClubPromise = fetch("http://localhost:8080/club", {mode:"no-cors"});
 
-  function search(e) {
+  let searchResults = [];
+
+  async function search(e) {
     if (e.target.value === "") {
       searchResults = [];
       return;
     }
-    searchResults = res.filter((item) => {
-      return item.name.toLowerCase().includes(e.target.value.toLowerCase());
+
+    const response = await fetchClubPromise;
+    const clubs = await response.json();
+    console.log(clubs)
+
+    searchResults = clubs.filter((club) => {
+      return club.clubName.toLowerCase().includes(e.target.value.toLowerCase());
     });
   }
 </script>
 
-<div
-  class="grid gap-6 grid-flow-row p-4 bg-slate-300 dark:bg-slate-800  rounded-xl"
->
+<div class="grid gap-6 grid-flow-row p-4 bg-slate-300 dark:bg-slate-800  rounded-xl">
   <form class="w-full px-6">
-    <label
-      for="default-search"
-      class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-      >Search</label
-    >
+    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div class="relative">
       <input
         type="search"
