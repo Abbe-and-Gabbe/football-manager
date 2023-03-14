@@ -5,28 +5,15 @@
 
     import ClubCardContent from "./clubCardContent.svelte";
     let club
-    let news
+
 
     let f = fetch(`http://localhost:8080/club/${id}`)
     f.then((res) => {
         return res.json()
     }).then((data) => {
         club = data.club
+        console.log(club)
     })
-
-    
-
-
-
-    let n = fetch(`http://localhost:8080/club/${id}/news`)
-    n.then((res) => {
-        return res.json()
-    }).then((data) => {
-        news = data.news
-      
-
-    })
-
 
 </script>
 
@@ -34,6 +21,5 @@
 {#if club}
     <WelcomePage club={club} />
 {/if}
-{#if news}
-    <ClubCardContent news={news}  />
-{/if}
+
+<ClubCardContent id = {id}  />
