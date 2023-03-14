@@ -15,7 +15,7 @@
           <div class="flex justify-between w-1/2 ">
             <ul>
               <li>
-                <Link to = "/club/{club.id}" class="text-black dark:text-white">
+                <Link to = "/club/{club.id}" on:click = {() => searchResults = []} class="text-black dark:text-white">
                   {club.clubName}
                 </Link>
               </li>

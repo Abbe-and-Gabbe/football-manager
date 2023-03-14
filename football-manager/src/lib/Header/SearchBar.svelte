@@ -16,8 +16,10 @@
     const f = await fetch("http://localhost:8080/club")
     const data = await f.json()
 
-    searchResults = data
-  }
+    searchResults = data.filter((item) => {
+      return item.clubName.toLowerCase().includes(e.target.value.toLowerCase());
+     });
+    }
 
   function debounce(func, wait) {
     let timeout;
@@ -32,6 +34,8 @@
       timeout = setTimeout(later, wait);
     };
   }
+
+
 
 </script>
 
