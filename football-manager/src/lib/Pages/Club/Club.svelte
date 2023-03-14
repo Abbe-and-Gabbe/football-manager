@@ -5,9 +5,20 @@
     import ClubNavBar from "./clubNavBar.svelte";
 
     import ClubCardContent from "./clubCardContent.svelte";
-    let team = teams.find((item) => item.id == id);
+    let club
+
+    let f = fetch(`http://localhost:8080/club/${id}`)
+    f.then((res) => {
+        return res.json()
+    }).then((data) => {
+        club = data.club
+        console.log(club)
+    })
+
 </script>
 
-<ClubNavBar id="{id}" />
-<WelcomePage/>
-<ClubCardContent/>
+<ClubNavBar {id} />
+{#if club}
+<WelcomePage club={club} />
+{/if}
+<ClubCardContent />

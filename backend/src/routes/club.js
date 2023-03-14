@@ -6,11 +6,14 @@ const router = Router();
 // Returns all the clubs
 
 router.get("/", async (req, res) => {
+    console.log("GET /club");
     try {
         const conn = await pool.getConnection();
         const clubs = await conn.query("SELECT * FROM Club");
+        console.log(clubs);
         res.json(clubs);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 });
@@ -18,6 +21,7 @@ router.get("/", async (req, res) => {
 // Returns a club with the given id
 
 router.get("/:id", async (req, res) => {
+    console.log("GET /club/:id");
     let data = {}
     try {
         const conn = await pool.getConnection();
@@ -25,8 +29,10 @@ router.get("/:id", async (req, res) => {
         data.club = club[0];
         const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [req.params.id]);
         data.teams = teams;
+        console.log(data)
         res.json(data);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message, errorCode: err.errno });
     }
 });
