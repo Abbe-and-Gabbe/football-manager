@@ -1,9 +1,5 @@
 <script>
-
- 
   export let news
-
-
 </script>
 
 <section class="animate-fade-in flex-col mt-10">
@@ -21,3 +17,4 @@
     </div>
     </div>
 </section>
+
