@@ -12,8 +12,7 @@
         return res.json()
     }).then((data) => {
         club = data.club
-        console.log(club)
-    })
+        })
 
 </script>
 
