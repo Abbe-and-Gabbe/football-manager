@@ -8,8 +8,9 @@
         return res.json()
     }).then((data) => {
         news = data
+        console.log(data)
     })
 
 </script>
 
-{id}
+
