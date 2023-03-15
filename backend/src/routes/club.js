@@ -55,6 +55,83 @@ router.get("/:id/news", async (req, res) => {
     }
 });
 
+
+// get specific news
+
+router.get("/:id/news/:newsId", async (req, res) => {
+  try {
+    const conn = await pool.getConnection();
+    const news = await conn.query(`
+      SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+      JOIN News ON Team.id = News.teamId
+      JOIN Person ON Person.id = News.personId
+      WHERE Team.clubId = ? AND News.id = ?
+      ORDER BY published DESC
+    `, [req.params.id, req.params.newsId]);
+    res.json(news);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+//create news 
+
+router.post("/:id/news", async (req, res) => {
+  try {
+    const { title, content, personId, teamId } = req.body;
+    const conn = await pool.getConnection();
+    const result = await conn.query(`
+      INSERT INTO News (title, content, published, personId, teamId) 
+      VALUES (?, ?, NOW(), ?, ?)
+    `, [title, content, personId, teamId]);
+    res.json({ message: "News created successfully.", newsId: result.insertId });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+//update news 
+router.put("/:id/news/:newsId", async (req, res) => {
+  try {
+    const { title, content, personId, teamId } = req.body;
+    const conn = await pool.getConnection();
+    const result = await conn.query(`
+      UPDATE News 
+      SET title = ?, content = ?, personId = ?, teamId = ? 
+      WHERE id = ? AND teamId = ?
+    `, [title, content, personId, teamId, req.params.newsId, req.params.id]);
+    if (result.affectedRows === 0) {
+      throw new Error("News not found or not owned by this club.");
+    }
+    res.json({ message: "News updated successfully." });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+//delete news 
+router.delete("/:id/news/:newsId", async (req, res) => {
+  try {
+    const conn = await pool.getConnection();
+    const result = await conn.query(`
+      DELETE FROM News 
+      WHERE id = ? AND teamId IN (
+        SELECT id FROM Team 
+        WHERE clubId = ?
+      )
+    `, [req.params.newsId, req.params.id]);
+    if (result.affectedRows === 0) {
+      throw new Error("News not found or not owned by this club.");
+    }
+    res.json({ message: "News deleted successfully." });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Get the upcoming matches for all the teams in a club
 
 router.get("/:id/games", async (req, res) => {
@@ -118,7 +195,7 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json("Clubb added successfully");
+        res.json("Club added successfully");
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
