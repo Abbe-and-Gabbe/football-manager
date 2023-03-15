@@ -1,7 +1,6 @@
 <script>
 
-  import { user } from "../user-store.js"
-
+  import {user} from "../../user-store.js"
   // This will be changed later when the backend is implemented
   let username = ""
   let password = ""
