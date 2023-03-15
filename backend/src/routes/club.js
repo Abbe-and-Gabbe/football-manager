@@ -132,6 +132,7 @@ router.delete("/:id/news/:newsId", async (req, res) => {
   }
 });
 
+
 // Get the upcoming matches for all the teams in a club
 
 router.get("/:id/games", async (req, res) => {
@@ -195,7 +196,7 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json("Club added successfully");
+        res.json("Clubb added successfully");
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
