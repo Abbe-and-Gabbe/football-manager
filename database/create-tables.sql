@@ -1,3 +1,4 @@
+
 CREATE TABLE Person (
   id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   firstName varchar(255),

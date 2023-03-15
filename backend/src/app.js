@@ -28,6 +28,21 @@ app.post('/tokens', function(request, response){
     const grantType = request.body.grant_type
     const username = request.body.username
     const password = request.body.password
+
+    if(grantType != "password"){
+        response.status(400).json({error: "unsupported_grant_type"})
+        return
+    }
+
+    //fetch from person 
+    if(username == "abc" && password == "abc123"){
+        const payload = {
+            isLoggedIn: true,
+        }
+        jwt.sign()
+    }
+
+
 })
 
 app.listen(PORT, () => {
