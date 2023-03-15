@@ -9,6 +9,7 @@
   import Teams from "./lib/Pages/Club/DisplayTeams/Teams.svelte";
   import ContactPage from "./lib/Pages/Club/ContactClubAdmin/ContactPage.svelte";
   export let url = "";
+  import SpecificClubCardContent from "./lib/Pages/Club/specificClubCardContent.svelte";
 </script>
 
 <Router {url}>
@@ -20,7 +21,8 @@
   <Route path="/club/:id" let:params>
     <Club id="{params.id}" />
   </Route>
-  
+  <Route path="/club/:id/news/:newsId" component={SpecificClubCardContent} />
+
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>
   </Route>

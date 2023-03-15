@@ -1,4 +1,5 @@
 <script>
+	import { Link } from 'svelte-routing'
 
   let news;
   export let id
@@ -31,7 +32,9 @@
     <div
       class="prose dark:prose-invert p-12 border border-slate-600 rounded-xl bg-slate-300 dark:bg-slate-800 flex-row w-full text-center lg:text-left"
     >
-    <h1>{item.title}</h1>
+    <Link to="/club/{id}/news/{item.id}">
+      {item.title}
+    </Link>
     <p class="prose dark:prose-invert truncate">
       {item.content}
     </p>

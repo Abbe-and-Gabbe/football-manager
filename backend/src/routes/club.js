@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+
 // Returns a club with the given id
 
 router.get("/:id", async (req, res) => {
@@ -37,13 +38,17 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+
+
+
+
 // Get the news for all the teams in a club
 
 router.get("/:id/news", async (req, res) => {
     try {
         const conn = await pool.getConnection();
         const news = await conn.query(`
-            SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+            SELECT News.id,title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
             JOIN News ON Team.id = News.teamId
             JOIN Person ON Person.id = News.personId
             WHERE Team.clubId = ?
@@ -60,22 +65,22 @@ router.get("/:id/news", async (req, res) => {
 // get specific news
 
 router.get("/:id/news/:newsId", async (req, res) => {
-    try {
-      const conn = await pool.getConnection();
-      const news = await conn.query(`
-        SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
-        JOIN News ON Team.id = News.teamId
-        JOIN Person ON Person.id = News.personId
-        WHERE Team.clubId = ? AND News.id = ?
-        ORDER BY published DESC
-      `, [req.params.id, req.params.newsId]);
-      res.json(news);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
-  
-  
+  console.log("SPECIFIC NEWS ------------------");
+  try {
+    const conn = await pool.getConnection();
+    const news = await conn.query(`
+      SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+      JOIN News ON Team.id = News.teamId
+      JOIN Person ON Person.id = News.personId
+      WHERE Team.clubId = ? AND News.id = ?
+      ORDER BY published DESC
+    `, [req.params.id, req.params.newsId]);
+    res.json(news);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
   //create news 
   
   router.post("/:id/news", async (req, res) => {

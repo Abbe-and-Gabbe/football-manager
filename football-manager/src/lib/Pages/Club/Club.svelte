@@ -21,4 +21,4 @@
     <WelcomePage club={club} />
 {/if}
 
-<ClubCardContent id = {id}  />
+<ClubCardContent id={id}  />
