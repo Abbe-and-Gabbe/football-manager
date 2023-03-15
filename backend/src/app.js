@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+const jwt = require('jsonwebtoken')
+const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
+ 
 // Route imports
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
@@ -39,7 +42,18 @@ app.post('/tokens', function(request, response){
         const payload = {
             isLoggedIn: true,
         }
-        jwt.sign()
+        jwt.sign(payload, ACCESS_TOKEN_SECRET, function(error, accessToken){
+            if(error){
+                response.status(500).end()
+            }else{
+                response.status(200).json({
+                    access_token: accessToken,
+                    type: "bearer"
+                })
+            }
+        })
+    }else{
+        response.status(400).json({error: "invalid_grant"})
     }
 
 
