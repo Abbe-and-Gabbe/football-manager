@@ -38,6 +38,20 @@
   {/if}
 </section>
 
+<div class="flex justify-center mt-10">
+  <a href="/update-news" class="bg-blue-500 w-1/4 text-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full  mr-80">
+    Edit New
+  </a>
+  
+  <button class="bg-blue-500 w-1/4 text-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+    Delete News
+  </button>
+</div>
+
+
+
+
+
 
 
 
