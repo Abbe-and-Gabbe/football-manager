@@ -10,6 +10,7 @@
   import ContactPage from "./lib/Pages/Club/ContactClubAdmin/ContactPage.svelte";
   export let url = "";
   import SpecificClubCardContent from "./lib/Pages/Club/specificClubCardContent.svelte";
+  import CreateNews from "./lib/Pages/Club/create-news.svelte";
 </script>
 
 <Router {url}>
@@ -22,6 +23,8 @@
     <Club id="{params.id}" />
   </Route>
   <Route path="/club/:id/news/:newsId" component={SpecificClubCardContent} />
+  <Route path="/club/:id/CreateNews" component={CreateNews} />
+
 
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>

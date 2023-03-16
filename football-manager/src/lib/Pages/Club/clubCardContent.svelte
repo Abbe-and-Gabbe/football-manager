@@ -15,12 +15,11 @@
 </script>
 
 <div class="flex justify-center mt-10">
-  <a href="/create-news" class="bg-blue-500 w-3/5 text-center	 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+  <a href="/club/{id}/CreateNews" class="bg-blue-500 w-3/5 text-center	 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
     Create News
   </a>
 </div>
 
-<h3>NEWS: {news}</h3>
 
 <section class="animate-fade-in flex-col mt-10">
   {#if news}
