@@ -14,15 +14,30 @@
   });
 </script>
 
-<section>
-  <h1>TRY</h1>
-    {#if specificNews}
-    {#each specificNews as item (item.newsId) }
-    <div>TOTOTOTOTOTO: {item.title}</div>
-    <div>{item.content}</div>
-        
-    {/each}
-        
-    {/if}
+
+<section class="animate-fade-in flex-col mt-10">
+  {#if specificNews}
+  
+  {#each specificNews as item (item.newsId) }
+  <div
+    class="bg-slate-200 dark:bg-slate-800 flex justify-evenly flex-col p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in mb-2"
+  >
+    <div
+      class="prose dark:prose-invert p-12 border border-slate-600 rounded-xl bg-slate-300 dark:bg-slate-800 flex-row w-full text-center lg:text-left"
+    >
+    <h1>{item.title}</h1>
+    <p class="prose dark:prose-invert truncate">
+      {item.content}
+    </p>
+      <p class="prose dark:prose-invert truncate">
+          {item.firstName} {item.lastName} - {item.published}
+      </p>
+    </div>
+  </div>
+  {/each}
+  {/if}
 </section>
+
+
+
 
