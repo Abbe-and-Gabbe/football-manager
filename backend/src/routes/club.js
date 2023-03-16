@@ -136,11 +136,14 @@ router.get("/:id/news/:newsId", async (req, res) => {
       if (result.affectedRows === 0) {
         throw new Error("News not found or not owned by this club.");
       }
+      conn.release();
       res.json({ message: "News deleted successfully." });
+			response.set('Location', `/club/${club.id}/news`)
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   });
+  
   
 
 // Get the upcoming matches for all the teams in a club

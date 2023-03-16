@@ -2,6 +2,7 @@
   export let id
   export let newsId
   let specificNews
+
   const sn = fetch(`http://localhost:8080/club/${id}/news/${newsId}`);
   sn.then((res) => {
     return res.json();
@@ -12,6 +13,10 @@
     specificNews = data;
     console.log(specificNews)
   });
+
+
+
+
 </script>
 
 
