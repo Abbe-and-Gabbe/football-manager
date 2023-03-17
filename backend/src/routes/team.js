@@ -33,9 +33,9 @@ router.get("/:id", async (req, res) => {
     let data = {}
     try {
         const connection = await pool.getConnection();
-        const query = "SELECT * FROM Person WHERE id IN (SELECT PersonId FROM TeamPlayer WHERE TeamId = ?)";
-        const persons = await connection.query(query, [req.params.id]);
-        data = persons;
+        const query = "SELECT * FROM Team WHERE id = ?"
+        const team = await connection.query(query, [req.params.id]);
+        data = team;
         // Hide all passwords
         // TODO: This should be done in the database
         data.forEach(person => {
