@@ -1,13 +1,34 @@
 <script>
+    import Person from "./Person.svelte";
+
     export let id;
+    let players;
+    let staff;
+
+    const fetchPlayers = fetch(`http://localhost:8080/team/${id}/players`);
+    const fetchStaff = fetch(`http://localhost:8080/team/${id}/staff`);
+
+    fetchPlayers
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            players = data;
+            console.log(players);
+        });
+
+    // fetchStaff.then((res) => {
+    //     return res.json();
+    // }).then((data) => {
+    //     staff = data;
+    //     console.log(players);
+    // });
 </script>
 
-<h1>Squad {id}</h1>
-
 <section class="animate-fade-in flex-col mt-10">
-    <div
-        class="bg-slate-200 dark:bg-slate-800 flex justify-evenly flex-col p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in mb-2"
-    >
-        <h1>Hwello</h1>
-    </div>
+    {#if players}
+        {#each players as player (player.id)}
+            <Person {player} />
+        {/each}
+    {/if}
 </section>
