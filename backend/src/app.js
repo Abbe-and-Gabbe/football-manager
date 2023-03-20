@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-const jwt = require('jsonwebtoken')
-const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
+//const jwt = require('jsonwebtoken')
+//const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
  
 // Route imports
 import personRouter from "./routes/person.js";
@@ -27,7 +27,7 @@ app.use("/team", teamRouter)
 app.use("/club", clubRouter)
 
 //login
-
+/*
 app.post('/tokens', function(request, response){
     const grantType = request.body.grant_type
     const username = request.body.username
@@ -63,7 +63,7 @@ app.post('/tokens', function(request, response){
 
 
 })
-
+*/
 app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
 });
