@@ -38,7 +38,20 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
+router.get("/:id/teams", async (req, res) => {
+    console.log("GET /club/:id/teams");
+    let data = {}
+    try {
+        const conn = await pool.getConnection();
+        const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [req.params.id]);
+        data.teams = teams;
+        console.log(data)
+        res.json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: err.message, errorCode: err.errno });
+    }
+});
 
 
 
@@ -124,26 +137,10 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json("Clubb added successfully");
+        res.json("Club added successfully");
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
-});
-
-
-router.post("/:id/news", async (req, res) => {
-  let title = req.query.title.toString();
-  let content = req.query.content.toString();
-  let datetime = req.query.content.toString();
-  try {
-    const conn = await console.query("INSERT INTO News (title, content, datetime) VALUES (?, ?, ?)", [title, content, datetime])
-    res.json("news added successfully");
-  } catch (err) {
-    res.status(500).json({message: "Something went wrong", errorCode: err.errno});
-  }
-
-
-
 });
 
 
