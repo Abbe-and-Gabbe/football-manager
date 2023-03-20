@@ -37,10 +37,12 @@ app.post('/tokens', function(request, response){
         response.status(400).json({error: "unsupported_grant_type"})
         return
     }
+    
+    //Have a invalid request check 
 
   
 
-    //fetch from person 
+    //Replace with username and password from DB 
     if(username == "abc" && password == "abc123"){
         const payload = {
             isLoggedIn: true,
