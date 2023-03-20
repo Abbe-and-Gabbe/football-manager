@@ -1,4 +1,5 @@
 <script>
+  import { link } from "svelte-routing";
   export let id;
   let news;
 
@@ -20,6 +21,7 @@
   <!-- TODO Add links -->
   {#if news}
     {#each news as item (item.id)}
+    <a href={"/news/" + item.id} use:link>
       <div
         class="bg-slate-200 dark:bg-slate-800 flex justify-evenly flex-col p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in mb-2"
       >
@@ -36,6 +38,7 @@
           </p>
         </div>
       </div>
+    </a>
     {/each}
   {/if}
 </section>
