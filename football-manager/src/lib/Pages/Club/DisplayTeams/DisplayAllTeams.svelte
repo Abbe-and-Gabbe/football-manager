@@ -5,7 +5,7 @@
   function toggleSelectedTeam(teamId) {
     selectedTeamId = selectedTeamId === teamId ? null : teamId;
   }*/
-
+  console.log(teams.teamName)
 
 </script>
 
@@ -17,7 +17,10 @@
         <h4 class="font-bold rounded-2xl border-8 border-black p-4 bg-slate-600 flex justify-center cursor-pointer">
           Teams
         </h4> 
+        {#if teams}
+        
           <p>{teams.teamName}</p>
+        {/if}
       </div>
 
   </div>
