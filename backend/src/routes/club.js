@@ -43,7 +43,6 @@ router.get("/:id", async (req, res) => {
 
 
 // Get the news for all the teams in a club
-
 router.get("/:id/news", async (req, res) => {
     try {
         const conn = await pool.getConnection();
@@ -63,7 +62,6 @@ router.get("/:id/news", async (req, res) => {
 });
 
 // get specific news
-
 router.get("/:id/news/:newsId", async (req, res) => {
   console.log("SPECIFIC NEWS ------------------");
   try {
@@ -81,69 +79,6 @@ router.get("/:id/news/:newsId", async (req, res) => {
   }
 });
 
-  //create news 
-  
-  router.post("/:id/news", async (req, res) => {
-    const { title, content, datetime, teamId } = req.body;
-    try {
-      const conn = await pool.getConnection();
-      const result = await conn.query(
-        "INSERT INTO News (title, content, datetime, teamId) VALUES (?, ?, ?, ?)",
-        [title, content, datetime, teamId]
-      );
-      conn.release();
-      res.json("News added successfully");
-    } catch (err) {
-      res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
-    }
-  });
-  
-  
-  
-  
-  
-  //update news 
-  router.put("/:id/news/:newsId", async (req, res) => {
-    try {
-      const { title, content, personId, teamId } = req.body;
-      const conn = await pool.getConnection();
-      const result = await conn.query(`
-        UPDATE News 
-        SET title = ?, content = ?, personId = ?, teamId = ? 
-        WHERE id = ? AND teamId = ?
-      `, [title, content, personId, teamId, req.params.newsId, req.params.id]);
-      if (result.affectedRows === 0) {
-        throw new Error("News not found or not owned by this club.");
-      }
-      res.json({ message: "News updated successfully." });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
-  
-  
-  //delete news 
-  router.delete("/:id/news/:newsId", async (req, res) => {
-    try {
-      const conn = await pool.getConnection();
-      const result = await conn.query(`
-        DELETE FROM News 
-        WHERE id = ? AND teamId IN (
-          SELECT id FROM Team 
-          WHERE clubId = ?
-        )
-      `, [req.params.newsId, req.params.id]);
-      if (result.affectedRows === 0) {
-        throw new Error("News not found or not owned by this club.");
-      }
-      conn.release();
-      res.json({ message: "News deleted successfully." });
-			response.set('Location', `/club/${club.id}/news`)
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
-  
   
 
 // Get the upcoming matches for all the teams in a club
