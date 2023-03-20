@@ -10,6 +10,7 @@
         return res.json()
     }).then((data) => {
         teams = data
+        console.log(teams)
         })
 
 
@@ -17,5 +18,6 @@
 </script>
 
 <ClubNavBar {id} />
-<DisplayAllTeams teams = {teams}/>
+  <DisplayAllTeams   teams = {teams}/>
+
 

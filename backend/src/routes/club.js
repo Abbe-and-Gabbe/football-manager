@@ -38,6 +38,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+//Get teams related to the club
 router.get("/:id/teams", async (req, res) => {
     console.log("GET /club/:id/teams");
     let data = {}
