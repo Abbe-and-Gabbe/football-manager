@@ -22,8 +22,6 @@
             <p class="border-2 border-black p-2 rounded-xl bg-slate-800">{team.teamName}</p>
           </div>
         {/each}
-      {:else}
-
       {/if}
       
     </div>

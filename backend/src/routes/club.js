@@ -60,13 +60,17 @@ router.get("/:id/teams", async (req, res) => {
 router.get("/:id/news", async (req, res) => {
     try {
         const conn = await pool.getConnection();
+        const page = req.query.page || 1; // default to page 1
+        const pageSize = req.query.pageSize || 10; // default page size to 10
+        const offset = (page - 1) * pageSize;
         const news = await conn.query(`
             SELECT News.id,title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
             JOIN News ON Team.id = News.teamId
             JOIN Person ON Person.id = News.personId
             WHERE Team.clubId = ?
             ORDER BY published DESC
-        `, [req.params.id]);
+            LIMIT ? OFFSET ?
+        `, [req.params.id, pageSize, offset]);
         console.log(news)
         res.json(news);
     } catch (err) {
@@ -74,6 +78,7 @@ router.get("/:id/news", async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 // Get the upcoming matches for all the teams in a club
 
