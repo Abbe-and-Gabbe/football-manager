@@ -63,7 +63,6 @@ router.get("/:id/news", async (req, res) => {
 
 // get specific news
 router.get("/:id/news/:newsId", async (req, res) => {
-  console.log("SPECIFIC NEWS ------------------");
   try {
     const conn = await pool.getConnection();
     const news = await conn.query(`
