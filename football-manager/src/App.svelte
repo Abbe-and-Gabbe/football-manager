@@ -28,8 +28,8 @@
 
   <Route path="/club/:id/contact" let:params> 
     <ContactPage id="{params.id}"/>
-
   </Route>
+  
   </main>
 </Router>
 <Footer />
