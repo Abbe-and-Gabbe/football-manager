@@ -1,4 +1,5 @@
 <script>
+  
     const events = [
     { date: new Date(2023, 1, 14), title: "Valentine's Day" },
     { date: new Date(2023, 2, 17), title: "St. Patrick's Day" },
