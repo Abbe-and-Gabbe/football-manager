@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+
 // Returns a club with the given id
 
 router.get("/:id", async (req, res) => {
@@ -37,20 +38,25 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Get the news for all the teams in a club
 
+
+
+
+// Get the news for all the teams in a club
 router.get("/:id/news", async (req, res) => {
     try {
         const conn = await pool.getConnection();
         const news = await conn.query(`
-            SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+            SELECT News.id,title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
             JOIN News ON Team.id = News.teamId
             JOIN Person ON Person.id = News.personId
             WHERE Team.clubId = ?
             ORDER BY published DESC
         `, [req.params.id]);
+        console.log(news)
         res.json(news);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: err.message });
     }
 });
@@ -123,5 +129,22 @@ router.post("/", async (req, res) => {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
 });
+
+
+router.post("/:id/news", async (req, res) => {
+  let title = req.query.title.toString();
+  let content = req.query.content.toString();
+  let datetime = req.query.content.toString();
+  try {
+    const conn = await console.query("INSERT INTO News (title, content, datetime) VALUES (?, ?, ?)", [title, content, datetime])
+    res.json("news added successfully");
+  } catch (err) {
+    res.status(500).json({message: "Something went wrong", errorCode: err.errno});
+  }
+
+
+
+});
+
 
 export default router;

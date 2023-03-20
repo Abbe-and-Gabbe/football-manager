@@ -25,7 +25,7 @@
   <Route path="/club/:id/calendar" let:params>
     <Calendar id={params.id}/>
   </Route>
-  
+
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>
   </Route>
