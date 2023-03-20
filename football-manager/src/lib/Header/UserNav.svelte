@@ -1,28 +1,44 @@
 <script>
-  import NotifyButton from "./NotifyButton.svelte";
 
+  import {user} from "../../user-store.js"
   // This will be changed later when the backend is implemented
-  let loggedIn = false;
+  let username = ""
+  let password = ""
+  async function login(){
+		
+		const response = await fetch("http://localhost:8080/tokens", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body: `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+		})
+		
+		// TODO: Need to check status code, etc.
+		const body = await response.json()
+		
+		const accessToken = body.access_token
+		
+		$user = {
+			isLoggedIn: true,
+			accessToken,
+		}
+		
+	}
 </script>
 
-<div class="text-black dark:text-white p-8 flex">
-  {#if loggedIn}
-    <div class="flex">
-      <img
-        src="images/userImg.jpg"
-        alt="userImg"
-        class="w-7 h-7 rounded-full m-2"
-      />
-      <NotifyButton />
-    </div>
-  {:else}
-    <button
-      class="relative inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      on:click={() => {
-        loggedIn = true;
-      }}
-    >
-      Login
-    </button>
-  {/if}
-</div>
+<form on:submit|preventDefault={login}>
+	
+	<div>
+		Username:
+		<input type="text" bind:value={username}>
+	</div>
+	
+	<div>
+		Password:
+		<input type="password" bind:value={password}>
+	</div>
+	
+	<input type="submit" value="Login">
+	
+</form>

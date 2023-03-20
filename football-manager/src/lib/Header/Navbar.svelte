@@ -1,6 +1,7 @@
 <script>
   import SearchBar from "./SearchBar.svelte";
   import UserNav from "./UserNav.svelte";
+	import { Link } from 'svelte-routing'
 </script>
 
 <header
@@ -8,7 +9,7 @@
 >
   <div class="flex justify-between items-center w-full">
     <h1 class="text-2xl font-bold prose dark:prose-invert">Football Manager</h1>
-    <UserNav />
+    <button class="text-2xl font-bold prose">Login</button> 
   </div>
   <SearchBar />
 </header>
