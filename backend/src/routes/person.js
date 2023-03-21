@@ -34,6 +34,16 @@ router.get("/:id/news", async(req, res) => {
     }
 });
 
+router.get("/:id/activites", async (req, res) => {
+    let id = req.params.id;
+    let data = {}
+    console.log("Get activities for person with id: " + id);
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+                        SELECT * FROM Activity
+
+
 
 // Return a person with the given id, the data is joined with the teams
 // where the person has a role, both player and staff roles. 
@@ -50,11 +60,11 @@ router.get("/:id", async(req, res) => {
         data.password = "*********";
         // Select the teams the person is in
         const playerTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team 
-                        JOIN TeamPlayer ON Team.id = TeamPlayer.teamId 
-                        JOIN Club ON Team.clubId = Club.id
-                        WHERE TeamPlayer.PersonId = ?
-                        `
+                SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team
+                JOIN TeamPlayer ON Team.id = TeamPlayer.teamId
+                JOIN Club ON Team.clubId = Club.id
+                WHERE TeamPlayer.PersonId = ?
+                    `
 
         // Get the teams where the person is a player
         const playerTeams = await connection.query(playerTeamsQuery, [req.params.id]);
@@ -62,11 +72,11 @@ router.get("/:id", async(req, res) => {
 
         // Get the teams where the person is a staff member
         const staffTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
-                        JOIN TeamStaff ON Team.id = TeamStaff.teamId
-                        JOIN Club ON Team.clubId = Club.id
-                        WHERE TeamStaff.PersonId = ?
-                        `
+                SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
+                JOIN TeamStaff ON Team.id = TeamStaff.teamId
+                JOIN Club ON Team.clubId = Club.id
+                WHERE TeamStaff.PersonId = ?
+                    `
         const staffTeams = await connection.query(staffTeamsQuery, [req.params.id]);
 
         data.staffTeams = staffTeams;
