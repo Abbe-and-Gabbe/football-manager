@@ -4,22 +4,32 @@
   
     export let id;
     let contactPersons = [];
+    const fetchContactStaff = fetch(`http://localhost:8080/club/${id}/contact`);
+
   
-    const fetchContactInfo = fetch(`http://localhost:8080/club/${id}/contact`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (Array.isArray(data.contactPersons)) {
-          contactPersons = data.contactPersons;
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    fetchContactStaff
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            contactPersons = data;
+        });
   </script>
   
   <ClubNavBar id={id} />
-  <CardForContactPage contactPersons={contactPersons} />
+  <div
+    class="bg-slate-200 dark:bg-slate-800 flex justify-evenly flex-col rounded-xl animate-fade-in p-6 mt-10 lg:mx-44" 
+>
+
+    <section class="animate-fade-in flex-col mt-10">
+        <div class="prose dark:prose-invert m-2">
+            <h1>Staff</h1>
+        </div>
+        {#if contactPersons}
+            {#each contactPersons as person (person.id)}
+                <CardForContactPage {person} />
+            {/each}
+        {/if}
+    </section>
+</div>
   
