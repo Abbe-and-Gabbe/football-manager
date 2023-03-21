@@ -21,4 +21,4 @@
 </script>
 
 <ClubNavBar {id} />
-<DisplayAllTeams {teams} />
+<DisplayAllTeams {teams} {id} />
