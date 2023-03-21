@@ -75,6 +75,39 @@ router.get("/:id/news", async (req, res) => {
     }
 });
 
+
+
+//contact person
+router.get("/:id/contact", async (req, res) => {
+    try {
+      const connection = await pool.getConnection();
+      const query = `
+        SELECT Person.*, Team.teamName FROM Person
+        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+        JOIN Team ON TeamStaff.TeamId = Team.id
+        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
+        LIMIT 1
+      `;
+  
+      const [data] = await connection.query(query, [req.params.id]);
+  
+      // Hide all passwords
+      data.password = "*********";
+  
+      connection.release();
+      res.send(data);
+    } catch (err) {
+      res.status(500);
+      res.send({
+        errorCode: "not_found",
+        errorMessage: "Team not found"
+      })
+    }
+  });
+  
+
+
+
 // Get the upcoming matches for all the teams in a club
 
 router.get("/:id/games", async (req, res) => {

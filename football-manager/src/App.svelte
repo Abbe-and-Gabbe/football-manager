@@ -22,7 +22,7 @@
     <Club id="{params.id}" />
   </Route>
 
-  <Route path="/team/:id" >    
+  <Route path="/team/:id" let:params>    
     <Team id="{params.id}"/>
   </Route>
 
