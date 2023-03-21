@@ -79,15 +79,20 @@ router.get("/:id/news", async (req, res) => {
 
 //contact person
 router.get("/:id/contact", async (req, res) => {
+    console.log("GET /club/:id/contact")
+
     try {
       const connection = await pool.getConnection();
       const query = `
-        SELECT Person.*, Team.teamName FROM Person
-        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
-        JOIN Team ON TeamStaff.TeamId = Team.id
-        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
-        LIMIT 1
-      `;
+      SELECT Person.firstName, Person.lastName, Person.email, Person.phoneNumber, Team.teamName
+FROM Person
+JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+JOIN Team ON TeamStaff.TeamId = Team.id
+WHERE Team.id = ? AND TeamStaff.role = 'Head Coach'
+LIMIT 1;
+
+    `;
+    
   
       const [data] = await connection.query(query, [req.params.id]);
   
