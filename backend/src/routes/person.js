@@ -41,16 +41,61 @@ router.get("/:id/activites", async (req, res) => {
     try {
         const connection = await pool.getConnection();
         const query = `
-                        SELECT * FROM TeamPlayer
-                        JOIN Team ON TeamPlayer.teamId = Team.id
-                        JOIN Training ON Team.id = Training.teamId
-                        WHERE TeamPlayer.personId = ?
+                        SELECT id, startDate, stopDate, "Training" as type FROM Training
+                        WHERE teamId IN (
+                            SELECT teamId FROM TeamPlayer
+                            WHERE personId = ?
+                        )
+                        OR teamId IN (
+                            SELECT teamId FROM TeamStaff
+                            WHERE personId = ?
+                        )
+                        ORDER BY startDate DESC
                         `
         const activities = await connection.query(query, [id, id]);
-        data = activities;
+
+        const queryGames = `
+                            SELECT id, homeTeam, awayTeam, homeScore, awayScore, date as startDate, "Game" as type FROM Game
+                            WHERE homeTeam IN (
+                                SELECT teamId FROM TeamPlayer
+                                WHERE personId = ?
+                            )
+                            OR awayTeam IN (
+                                SELECT teamId FROM TeamPlayer
+                                WHERE personId = ?
+                            )
+                            OR homeTeam IN (
+                                SELECT teamId FROM TeamStaff
+                                WHERE personId = ?
+                            )
+                            OR awayTeam IN (
+                                SELECT teamId FROM TeamStaff
+                                WHERE personId = ?
+                            )
+                            ORDER BY date DESC
+                            `
+
+        const games = await connection.query(queryGames, [id, id, id, id]);
+
+        data = activities.concat(games);
+
+        // Sort the array by date acsending
+        data.sort((a, b) => {
+            return new Date(a.startDate) - new Date(b.startDate);
+        });
+
+        // Only return the 10 latest activities
+        data = data.slice(0, 10);
+
+        // Only show activities where the date is in the future
+        data = data.filter((activity) => {
+            return new Date(activity.startDate) > new Date();
+        });
+
         connection.release();
         res.send(data);
     } catch (err) {
+        console.log(err);
         res.status(404);
         res.send({
             errorCode: "not_found",
