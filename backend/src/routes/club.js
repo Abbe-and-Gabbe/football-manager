@@ -79,36 +79,34 @@ router.get("/:id/news", async (req, res) => {
 
 //contact person
 router.get("/:id/contact", async (req, res) => {
-    console.log("GET /club/:id/contact")
-
+    console.log("/:id/contact")
+    let data = {}
     try {
-      const connection = await pool.getConnection();
-      const query = `
-      SELECT Person.firstName, Person.lastName, Person.email, Person.phoneNumber, Team.teamName
-FROM Person
-JOIN TeamStaff ON Person.id = TeamStaff.PersonId
-JOIN Team ON TeamStaff.TeamId = Team.id
-WHERE Team.id = ? AND TeamStaff.role = 'Head Coach'
-LIMIT 1;
+        const connection = await pool.getConnection();
+        const query = `
+        SELECT * FROM Person
+        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
+        
+        `;
 
-    `;
-    
-  
-      const [data] = await connection.query(query, [req.params.id]);
-  
-      // Hide all passwords
-      data.password = "*********";
-  
-      connection.release();
-      res.send(data);
+        data = await connection.query(query, [req.params.id]);
+        // Hide all passwords
+
+        data.forEach(person => {
+            person.password = "*********";
+        });
+
+        connection.release();
+        res.send(data);
     } catch (err) {
-      res.status(500);
-      res.send({
-        errorCode: "not_found",
-        errorMessage: "Team not found"
-      })
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
     }
-  });
+});
   
 
 

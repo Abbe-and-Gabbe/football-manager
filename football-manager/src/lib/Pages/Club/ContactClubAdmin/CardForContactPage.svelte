@@ -6,8 +6,8 @@
   <div class="prose dark:prose-invert m-2">
     <h1>Staff</h1>
   </div>
-  {#if Array.isArray(contactPersons)}
-    {#each contactPersons as person }
+  {#if Array.isArray( contactPersons)}
+    {#each contactPersons as person (person.id)}
       <div class="bg-slate-200 dark:bg-slate-800 flex justify-between lg:flex-row gap-2 rounded-xl items-center animate-fade-in mb-2 hover:bg-slate-300 dark:hover:bg-slate-700 border border-slate-600 pl-12 ">
           <div class="flex flex-col prose dark:prose-invert">
             <h2>{person.firstName} {person.lastName}</h2>

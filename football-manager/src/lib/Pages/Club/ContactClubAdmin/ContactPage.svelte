@@ -5,7 +5,7 @@
     export let id;
     let contactPersons = [];
   
-    let fetchContactInfo = fetch(`http://localhost:8080/club/${id}/contact`)
+    const fetchContactInfo = fetch(`http://localhost:8080/club/${id}/contact`)
       .then((res) => {
         return res.json();
       })
