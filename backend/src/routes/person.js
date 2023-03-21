@@ -41,7 +41,24 @@ router.get("/:id/activites", async (req, res) => {
     try {
         const connection = await pool.getConnection();
         const query = `
-                        SELECT * FROM Activity
+                        SELECT * FROM TeamPlayer
+                        JOIN Team ON TeamPlayer.teamId = Team.id
+                        JOIN Training ON Team.id = Training.teamId
+                        WHERE TeamPlayer.personId = ?
+                        `
+        const activities = await connection.query(query, [id, id]);
+        data = activities;
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found"
+        })
+    }
+});
+
 
 
 
