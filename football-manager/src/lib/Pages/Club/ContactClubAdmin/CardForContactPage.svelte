@@ -9,12 +9,9 @@
         <div class="flex flex-col prose dark:prose-invert">
             <h2>Name: {person.firstName} {person.lastName}</h2>
             <p>Email: {person.email}</p>
-            <p>PhoneNumber: {person.phoneNumber}</p>
+            <p>Number: {person.phoneNumber}</p>
             <p>Role: {person.role}</p>
-
         </div>
-        <img src={person.image || "https://via.placeholder.com/100"} alt="" class="rounded" />
-
     {/if}
 
 </div>
