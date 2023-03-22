@@ -1,19 +1,8 @@
 <script>
+  export let activities
+  export let games
   
-    const events = [
-    { date: new Date(2023, 1, 14), title: "Valentine's Day" },
-    { date: new Date(2023, 2, 17), title: "St. Patrick's Day" },
-    { date: new Date(2023, 3, 1), title: "April Fools' Day" },
-    { date: new Date(2023, 4, 9), title: "Mother's Day" },
-    { date: new Date(2023, 5, 19), title: "Father's Day" },
-    { date: new Date(2023, 6, 4), title: "Independence Day" },
-    { date: new Date(2023, 7, 7), title: "Labor Day" },
-    { date: new Date(2023, 8, 11), title: "Patriot Day" },
-    { date: new Date(2023, 9, 31), title: "Halloween" },
-    { date: new Date(2023, 10, 23), title: "Thanksgiving Day" },
-    { date: new Date(2023, 11, 25), title: "Christmas Day" },
-    { date: new Date(2024, 0, 1), title: "New Year's Day" },
-  ];
+    
 
   let currentDate = new Date();
 
