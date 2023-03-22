@@ -1,4 +1,5 @@
 <script>
+  import Admin from "../../Admin/Admin.svelte";
     import ClubNavBar from "../clubNavBar.svelte";
     import CardForContactPage from "./CardForContactPage.svelte";
   

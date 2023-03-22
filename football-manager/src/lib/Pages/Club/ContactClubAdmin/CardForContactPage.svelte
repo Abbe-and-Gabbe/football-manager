@@ -11,6 +11,7 @@
             <p>Email: {person.email}</p>
             <p>Number: {person.phoneNumber}</p>
             <p>Role: {person.role}</p>
+            <p>Team: {person.teamName}</p>
         </div>
     {/if}
 
