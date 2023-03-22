@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+
 // Returns a club with the given id
 
 router.get("/:id", async (req, res) => {
@@ -37,23 +38,78 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Get the news for all the teams in a club
+//Get teams related to the club
+router.get("/:id/teams", async (req, res) => {
+    console.log("GET /club/:id/teams");
+    let data = {}
+    try {
+        const conn = await pool.getConnection();
+        const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [req.params.id]);
+        data.teams = teams;
+        console.log(data)
+        res.json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: err.message, errorCode: err.errno });
+    }
+});
 
+
+
+// Get the news for all the teams in a club
 router.get("/:id/news", async (req, res) => {
     try {
         const conn = await pool.getConnection();
         const news = await conn.query(`
-            SELECT title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
+            SELECT News.id,title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
             JOIN News ON Team.id = News.teamId
             JOIN Person ON Person.id = News.personId
             WHERE Team.clubId = ?
             ORDER BY published DESC
         `, [req.params.id]);
+        console.log(news)
         res.json(news);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: err.message });
     }
 });
+
+
+
+//contact person
+router.get("/:id/contact", async (req, res) => {
+    console.log("/:id/contact")
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+        SELECT * FROM Person
+        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
+        
+        `;
+
+        data = await connection.query(query, [req.params.id]);
+        // Hide all passwords
+
+        data.forEach(person => {
+            person.password = "*********";
+        });
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+  
+
+
 
 // Get the upcoming matches for all the teams in a club
 
@@ -118,10 +174,11 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json("Clubb added successfully");
+        res.json("Club added successfully");
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
 });
+
 
 export default router;
