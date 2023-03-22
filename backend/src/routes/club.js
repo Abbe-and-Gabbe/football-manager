@@ -84,10 +84,10 @@ router.get("/:id/contact", async (req, res) => {
     try {
         const connection = await pool.getConnection();
         const query = `
-        SELECT * FROM Person
+        SELECT firstName, lastName, email, phoneNumber, teamName, role FROM Person
         JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+        JOIN Team ON Team.id = TeamStaff.TeamId
         WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
-        
         `;
 
         data = await connection.query(query, [req.params.id]);
@@ -107,7 +107,7 @@ router.get("/:id/contact", async (req, res) => {
         })
     }
 });
-  
+
 
 
 
