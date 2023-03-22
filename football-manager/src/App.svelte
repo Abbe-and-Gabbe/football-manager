@@ -8,6 +8,7 @@
   import Club from "./lib/Pages/Club/Club.svelte";
   import Teams from "./lib/Pages/Club/DisplayTeams/Teams.svelte";
   import ContactPage from "./lib/Pages/Club/ContactClubAdmin/ContactPage.svelte";
+  import Team from "./lib/Pages/Team/Team.svelte";
   export let url = "";
 </script>
 
@@ -21,6 +22,9 @@
     <Club id="{params.id}" />
   </Route>
 
+  <Route path="/team/:id" let:params>    
+    <Team id="{params.id}"/>
+  </Route>
 
   <Route path="/club/:id/teams" let:params> 
     <Teams id="{params.id}"/>
@@ -28,8 +32,8 @@
 
   <Route path="/club/:id/contact" let:params> 
     <ContactPage id="{params.id}"/>
-
   </Route>
+  
   </main>
 </Router>
 <Footer />

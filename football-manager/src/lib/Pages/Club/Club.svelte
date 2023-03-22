@@ -14,11 +14,10 @@
         club = data.club
         })
 
+
+
 </script>
 
 <ClubNavBar {id} />
-{#if club}
-    <WelcomePage club={club} />
-{/if}
-
+<WelcomePage club={club}/>
 <ClubCardContent id={id}  />

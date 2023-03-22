@@ -38,7 +38,21 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
+//Get teams related to the club
+router.get("/:id/teams", async (req, res) => {
+    console.log("GET /club/:id/teams");
+    let data = {}
+    try {
+        const conn = await pool.getConnection();
+        const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [req.params.id]);
+        data.teams = teams;
+        console.log(data)
+        res.json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: err.message, errorCode: err.errno });
+    }
+});
 
 
 
@@ -60,6 +74,42 @@ router.get("/:id/news", async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+
+
+//contact person
+router.get("/:id/contact", async (req, res) => {
+    console.log("/:id/contact")
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+        SELECT * FROM Person
+        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
+        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
+        
+        `;
+
+        data = await connection.query(query, [req.params.id]);
+        // Hide all passwords
+
+        data.forEach(person => {
+            person.password = "*********";
+        });
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+  
+
+
 
 // Get the upcoming matches for all the teams in a club
 
@@ -124,26 +174,10 @@ router.post("/", async (req, res) => {
         const conn = await pool.getConnection();
         const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [clubName]);
         console.log(result);
-        res.json("Clubb added successfully");
+        res.json("Club added successfully");
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", errorCode: err.errno });
     }
-});
-
-
-router.post("/:id/news", async (req, res) => {
-  let title = req.query.title.toString();
-  let content = req.query.content.toString();
-  let datetime = req.query.content.toString();
-  try {
-    const conn = await console.query("INSERT INTO News (title, content, datetime) VALUES (?, ?, ?)", [title, content, datetime])
-    res.json("news added successfully");
-  } catch (err) {
-    res.status(500).json({message: "Something went wrong", errorCode: err.errno});
-  }
-
-
-
 });
 
 
