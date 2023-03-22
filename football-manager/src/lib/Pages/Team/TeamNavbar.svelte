@@ -8,7 +8,6 @@
   <NavButton buttonText="Home" location="/team/{id}" {id} />
   <NavButton buttonText="Squad" location="/team/{id}/squad" {id} />
   <NavButton buttonText="Calendar" location="/team/{id}/calendar" {id} />
-  <NavButton buttonText="Contact" location="/team/{id}/contact" {id} />
   <!-- Only visible to admins: -->
   <NavButton buttonText="Admin" location="/team/{id}/admin" {id} />
 </div>
