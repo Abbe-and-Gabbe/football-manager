@@ -17,17 +17,18 @@ CREATE TABLE Team (
   clubId int,
   teamName varchar(255)
 );
+CREATE TABLE Training (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  TeamId int,
+  startDate datetime,
+  stopDate datetime
+);
 CREATE TABLE TeamStaff (
   PersonId int,
   TeamId int,
   role varchar(255)
 );
 CREATE TABLE TeamPlayer (PersonId int, TeamId int);
-CREATE TABLE Training (
-  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  TeamId int,
-  date datetime
-);
 CREATE TABLE PlayerTraining (PersonId int, TrainingId int);
 CREATE TABLE Game (
   id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -184,17 +185,12 @@ VALUES (1, 1),
   (4, 4),
   (5, 5);
 -- Insert test data into Training table
-INSERT INTO Training (TeamId, date)
-VALUES (1, '2023-03-01 10:00:00'),
-  (1, '2023-03-03 10:00:00'),
-  (2, '2023-03-02 10:00:00'),
-  (2, '2023-03-04 10:00:00'),
-  (3, '2023-03-01 14:00:00'),
-  (3, '2023-03-03 14:00:00'),
-  (4, '2023-03-02 14:00:00'),
-  (4, '2023-03-04 14:00:00'),
-  (5, '2023-03-01 16:00:00'),
-  (5, '2023-03-03 16:00:00');
+INSERT INTO Training (TeamId, startDate, stopDate)
+VALUES (1, '2023-03-01 10:00:00', '2023-03-01 12:00:00'),
+  (2, '2023-03-01 10:00:00', '2023-03-01 12:00:00'),
+  (3, '2023-03-01 10:00:00', '2023-03-01 12:00:00'),
+  (4, '2023-03-01 10:00:00', '2023-03-01 12:00:00'),
+  (5, '2023-03-01 10:00:00', '2023-03-01 12:00:00');
 -- Insert test data into PlayerTraining table
 INSERT INTO PlayerTraining (PersonId, TrainingId)
 VALUES (1, 1),

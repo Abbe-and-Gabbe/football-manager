@@ -34,6 +34,78 @@ router.get("/:id/news", async(req, res) => {
     }
 });
 
+router.get("/:id/activites", async (req, res) => {
+    let id = req.params.id;
+    let data = {}
+    console.log("Get activities for person with id: " + id);
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+                        SELECT id, startDate, stopDate, "Training" as type FROM Training
+                        WHERE teamId IN (
+                            SELECT teamId FROM TeamPlayer
+                            WHERE personId = ?
+                        )
+                        OR teamId IN (
+                            SELECT teamId FROM TeamStaff
+                            WHERE personId = ?
+                        )
+                        ORDER BY startDate DESC
+                        `
+        const activities = await connection.query(query, [id, id]);
+
+        const queryGames = `
+                            SELECT id, homeTeam, awayTeam, homeScore, awayScore, date as startDate, "Game" as type FROM Game
+                            WHERE homeTeam IN (
+                                SELECT teamId FROM TeamPlayer
+                                WHERE personId = ?
+                            )
+                            OR awayTeam IN (
+                                SELECT teamId FROM TeamPlayer
+                                WHERE personId = ?
+                            )
+                            OR homeTeam IN (
+                                SELECT teamId FROM TeamStaff
+                                WHERE personId = ?
+                            )
+                            OR awayTeam IN (
+                                SELECT teamId FROM TeamStaff
+                                WHERE personId = ?
+                            )
+                            ORDER BY date DESC
+                            `
+
+        const games = await connection.query(queryGames, [id, id, id, id]);
+
+        data = activities.concat(games);
+
+        // Sort the array by date acsending
+        data.sort((a, b) => {
+            return new Date(a.startDate) - new Date(b.startDate);
+        });
+
+        // Only return the 10 latest activities
+        data = data.slice(0, 10);
+
+        // Only show activities where the date is in the future
+        data = data.filter((activity) => {
+            return new Date(activity.startDate) > new Date();
+        });
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        console.log(err);
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found"
+        })
+    }
+});
+
+
+
 
 // Return a person with the given id, the data is joined with the teams
 // where the person has a role, both player and staff roles. 
@@ -50,11 +122,11 @@ router.get("/:id", async(req, res) => {
         data.password = "*********";
         // Select the teams the person is in
         const playerTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team 
-                        JOIN TeamPlayer ON Team.id = TeamPlayer.teamId 
-                        JOIN Club ON Team.clubId = Club.id
-                        WHERE TeamPlayer.PersonId = ?
-                        `
+                SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team
+                JOIN TeamPlayer ON Team.id = TeamPlayer.teamId
+                JOIN Club ON Team.clubId = Club.id
+                WHERE TeamPlayer.PersonId = ?
+                    `
 
         // Get the teams where the person is a player
         const playerTeams = await connection.query(playerTeamsQuery, [req.params.id]);
@@ -62,11 +134,11 @@ router.get("/:id", async(req, res) => {
 
         // Get the teams where the person is a staff member
         const staffTeamsQuery = `
-                        SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
-                        JOIN TeamStaff ON Team.id = TeamStaff.teamId
-                        JOIN Club ON Team.clubId = Club.id
-                        WHERE TeamStaff.PersonId = ?
-                        `
+                SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
+                JOIN TeamStaff ON Team.id = TeamStaff.teamId
+                JOIN Club ON Team.clubId = Club.id
+                WHERE TeamStaff.PersonId = ?
+                    `
         const staffTeams = await connection.query(staffTeamsQuery, [req.params.id]);
 
         data.staffTeams = staffTeams;
