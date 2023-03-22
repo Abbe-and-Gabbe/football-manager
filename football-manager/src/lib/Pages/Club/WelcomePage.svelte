@@ -1,5 +1,6 @@
 <script>
   export let club
+  import Calendar from "../../Components/Calendar.svelte";
 </script>
 
 <section class="animate-fade-in flex-col mt-10">
