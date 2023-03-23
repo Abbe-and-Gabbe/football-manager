@@ -157,6 +157,7 @@ router.get("/:id/activities", async (req, res) => {
         const activities = await conn.query(`
             SELECT teamId, date, Team.teamName FROM Training
             JOIN Team ON Team.id = Training.teamId
+            WHERE teamId = ?
             ORDER BY date ASC
         `, [req.params.id]);
 

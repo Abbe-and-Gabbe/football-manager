@@ -1,6 +1,5 @@
 <script>
-  export let activities
-  export let games
+  export let games;
   
     
 
@@ -93,6 +92,7 @@
     selectedDate = day;
   }
 </script>
+{games.homeTeam}
 <section class="animate-fade-in flex-col mt-10">
     <div
       class="bg-slate-500 dark:bg-slate-400 static justify-evenly flex-col p-4 md:p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in"
@@ -162,9 +162,12 @@
           >
             {#if day !== null}
               <span class="text-sm">{day.getDate()}</span>
-              {#each events.filter((event) => event.date.toDateString() === day.toDateString()) as event}
-                <div class="text-xs">{event.title}</div>
+              {#if games.length > 0}
+              {#each games.filter((game) => game.date.toDateString() === day.toDateString()) as game}
+                <div class="text-xs">{game.homeTeam}</div>
               {/each}
+            {/if}
+            
             {/if}
           </div>
         {/each}
