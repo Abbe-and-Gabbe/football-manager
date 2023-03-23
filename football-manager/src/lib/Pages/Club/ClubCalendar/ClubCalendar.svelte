@@ -1,6 +1,6 @@
 <script>
     export let id
-    let games = [];
+    let games = []
     import DisplayCalendar from "../../../Components/DisplayCalendar.svelte";
     import ClubNavBar from "../clubNavBar.svelte";
 

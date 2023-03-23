@@ -63,6 +63,7 @@
     return days;
   }
 
+
   // Selected date
   let selectedDate;
 
@@ -87,8 +88,9 @@
 
   // Handle day click to select date
   function handleDayClick(day) {
-    selectedDate = day;
-  }
+  selectedDate = day;
+}
+
 
 </script>
 
@@ -143,34 +145,32 @@
           </svg>
         </button>
       </div>
-  
-      <!-- Calendar grid -->
-      <div class="grid grid-cols-7 gap-2 mt-4">
-        {#each weekdays as day}
-          <div
-            class="bg-slate-400 dark:bg-slate-700 py-2 rounded-xl text-white text-center font-bold"
-          >
-            {day}
-          </div>
-        {/each}
-        {#each daysInCurrentMonth as day}
-          <div
-            class="bg-white dark:bg-gray-800 py-2 rounded-xl text-gray-800 dark:text-white text-center font-bold cursor-pointer transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-600">
-            {#if day !== null}
-              <span class="text-sm">{day.getDate()}</span>
-              {#if games}
-              {#each games as game }
-                  <div class="text-xs">
-                   <p>{game.homeTeam} vs {game.awayTeam}</p> 
-                   <p>{game.date}</p> 
-
-                  </div>
-              {/each}
-            {/if}
-            {/if}
-          </div>
-        {/each}
+  <!-- Calendar grid -->
+  <div class="grid grid-cols-7 gap-2 mt-4">
+    {#each weekdays as day}
+      <div
+        class="bg-slate-400 dark:bg-slate-700 py-2 rounded-xl text-white text-center font-bold"
+      >
+        {day}
       </div>
+    {/each}
+    {#each daysInCurrentMonth as day}
+    <div class="bg-slate-400 dark:bg-slate-800 rounded-xl p-2 text-center" class:selected={day === selectedDate} on:click={() => handleDayClick(day)}>
+      {#if day}
+        <span>{day.getDate()}</span>
+        {#each games.filter(game => new Date(game.date).toDateString() === day.toDateString()) as game}
+          <div>
+            <p>
+            {game.homeTeam} vs {game.awayTeam}
+          </p>
+          </div>
+        {/each}
+      {/if}
     </div>
-  </section>
+  {/each}
   
+  </div>
+</div>
+</section>
+
+      
