@@ -2,7 +2,6 @@
   import SearchBar from "./SearchBar.svelte";
   import UserNav from "./UserNav.svelte";
   import { Link } from "svelte-routing";
-  export let location = "/";
 </script>
 
 <header
@@ -10,7 +9,7 @@
 >
   <div class="flex justify-between items-center w-full">
     <h1 class="text-2xl font-bold prose dark:prose-invert">Football Manager</h1>
-    <button class="text-2xl font-bold prose" location="Login">Login</button>
+    <Link to="/login" class="text-2xl font-bold prose">Login</Link>
   </div>
   <SearchBar />
 </header>
