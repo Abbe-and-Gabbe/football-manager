@@ -1,7 +1,5 @@
 <script>
   export let games;
-  
-    
 
   let currentDate = new Date();
 
@@ -91,8 +89,9 @@
   function handleDayClick(day) {
     selectedDate = day;
   }
+
 </script>
-{games.homeTeam}
+
 <section class="animate-fade-in flex-col mt-10">
     <div
       class="bg-slate-500 dark:bg-slate-400 static justify-evenly flex-col p-4 md:p-12 lg:flex-row gap-2 rounded-xl items-center lg:mx-44 animate-fade-in"
@@ -156,18 +155,18 @@
         {/each}
         {#each daysInCurrentMonth as day}
           <div
-            class="bg-white dark:bg-gray-800 py-2 rounded-xl text-gray-800 dark:text-white text-center font-bold cursor-pointer transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-600"
-            class:selected={day === selectedDate}
-            on:click={() => handleDayClick(day)}
-          >
+            class="bg-white dark:bg-gray-800 py-2 rounded-xl text-gray-800 dark:text-white text-center font-bold cursor-pointer transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-600">
             {#if day !== null}
               <span class="text-sm">{day.getDate()}</span>
-              {#if games.length > 0}
-              {#each games.filter((game) => game.date.toDateString() === day.toDateString()) as game}
-                <div class="text-xs">{game.homeTeam}</div>
+              {#if games}
+              {#each games as game }
+                  <div class="text-xs">
+                   <p>{game.homeTeam} vs {game.awayTeam}</p> 
+                   <p>{game.date}</p> 
+
+                  </div>
               {/each}
             {/if}
-            
             {/if}
           </div>
         {/each}
