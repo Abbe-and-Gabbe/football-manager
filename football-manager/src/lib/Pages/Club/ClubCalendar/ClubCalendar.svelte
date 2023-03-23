@@ -9,8 +9,7 @@
       return res.json();
     })
     .then((data) => {
-      console.log(data);
-      games = data
+        games = data
         console.log(games)
     })
     .catch((error) => {
