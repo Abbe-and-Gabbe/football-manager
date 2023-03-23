@@ -1,5 +1,6 @@
 <script>
   let email = "";
+  let hello = "hello";
   let password = "";
   let isLoading = false;
   let isSuccess = false;
