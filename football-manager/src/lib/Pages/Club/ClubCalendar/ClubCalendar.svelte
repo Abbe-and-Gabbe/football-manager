@@ -10,10 +10,8 @@
     })
     .then((data) => {
       console.log(data);
-      if (Array.isArray(data.games)) {
-        games = data.games;
+        games = data
         console.log(games)
-      }
     })
     .catch((error) => {
       console.error(error);
