@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
 
 // Route imports
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
 import clubRouter from "./routes/club.js";
+import authRouter from "./routes/auth.js";
 
 import { request } from "https";
 
