@@ -44,6 +44,42 @@ router.post("/signup", async (req, res) => {
     }
 })
 
+router.get("/login", async (req, res) => {
+    const { email, password } = req.query;
+    console.log(email, password)
+
+    // Hash the password
+
+    const connection = await pool.getConnection();
+    const query = "SELECT id, firstName, lastName, firebaseId FROM Person WHERE email = ? AND password = ?"
+
+    const result = await connection.query(query, [email, password]);
+
+    if (result.length > 0) {
+        // Check if the user has connection in TeamStaff
+
+        const teamStaffConnection = await pool.getConnection();
+
+        const teamStaffQuery = "SELECT * FROM TeamStaff WHERE personId = ?"
+
+        const teamStaffResult = await teamStaffConnection.query(teamStaffQuery, [result[0].id]);
+
+        if (teamStaffResult.length > 0) {
+            result[0].isStaff = true;
+        } else {
+            result[0].isStaff = false;
+        }
+
+        res.send(result[0]);
+    } else {
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "User not found"
+        })
+    }
+})
+
+
 async function checkIfUserHasAccount(email) {
     // Check if email already exists
     const connection = await pool.getConnection();
