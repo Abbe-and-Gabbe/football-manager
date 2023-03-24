@@ -25,10 +25,23 @@ router.post("/signup", async (req, res) => {
         const newQuery = "SELECT id, firstName, lastName, firebaseId FROM Person WHERE email = ?"
         const result = await newConnection.query(newQuery, [req.query.email]);
         newConnection.release();
+
+        // Check if the user has connection in TeamStaff
+
+        const teamStaffConnection = await pool.getConnection();
+
+        const teamStaffQuery = "SELECT * FROM TeamStaff WHERE personId = ?"
+
+        const teamStaffResult = await teamStaffConnection.query(teamStaffQuery, [result[0].id]);
+
+        if (teamStaffResult.length > 0) {
+            result[0].isStaff = true;
+        } else {
+            result[0].isStaff = false;
+        }
+
         res.send(result[0]);
     }
-
-
 })
 
 async function checkIfUserHasAccount(email) {
