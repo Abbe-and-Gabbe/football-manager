@@ -6,6 +6,7 @@ CREATE TABLE Person (
   email varchar(255),
   gender varchar(255),
   phoneNumber varchar(255),
+  firebaseId varchar(255),
   password varchar(255)
 );
 CREATE TABLE Club (
