@@ -46,7 +46,6 @@ router.post("/signup", async (req, res) => {
 
 router.get("/login", async (req, res) => {
     const { email, password } = req.query;
-    console.log(email, password)
 
     // Hash the password
 
