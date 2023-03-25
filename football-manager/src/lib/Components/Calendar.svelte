@@ -1,5 +1,6 @@
 <script>
   export let games;
+  export let active;
 
   let currentDate = new Date();
 
@@ -162,6 +163,7 @@
               <div style={index > 0 ? "margin-top: 10px;" : ""}>
                 <p>
                   {game.homeTeam} vs {game.awayTeam}
+                  {game.date}
                 </p>
               </div>
             {/each}
