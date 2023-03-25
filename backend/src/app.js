@@ -7,6 +7,7 @@ import cors from "cors";
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
 import clubRouter from "./routes/club.js";
+import newsRouter from "./routes/news.js";
 import { request } from "https";
 
 const PORT = 8080;
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 app.use("/person", personRouter);
 app.use("/team", teamRouter)
 app.use("/club", clubRouter)
+app.use("/news", newsRouter)
 
 //login
 /*
