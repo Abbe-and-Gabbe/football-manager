@@ -176,5 +176,31 @@ router.get("/:id/games", async (req, res) => {
     }
 });
 
+// Returns all trainings for the team with the given id
+
+router.get("/:id/activities", async (req, res) => {
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            SELECT Training.id, Training.startDate, Training.stopDate, Team.teamName FROM Training
+            JOIN Team ON Training.TeamId = Team.id
+            WHERE Training.TeamId = ?
+            ORDER BY Training.startDate DESC
+        `;
+        data = await connection.query(query, [req.params.id]);
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+
+
+
 
 export default router;
