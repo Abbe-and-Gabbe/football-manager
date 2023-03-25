@@ -23,7 +23,9 @@
     class="h-px my-8 border border-slate-200 dark:border-slate-700 rounded-xl"
   />
 
-  <div class="bg-slate-400 dark:bg-slate-800 p-12 rounded-xl shadow-2xl lg:mx-44">
+  <div
+    class="bg-slate-400 dark:bg-slate-800 p-12 rounded-xl shadow-2xl lg:mx-44"
+  >
     <div class="prose dark:prose-invert w-full m-auto text-center mb-12">
       <h2>Features</h2>
     </div>

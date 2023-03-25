@@ -1,4 +1,3 @@
-
 <script>
   import NavButton from "../../Components/NavButton.svelte";
   export let id;

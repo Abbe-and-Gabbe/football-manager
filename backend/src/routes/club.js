@@ -155,9 +155,11 @@ router.get("/:id/activities", async (req, res) => {
     try {
         const conn = await pool.getConnection();
         const activities = await conn.query(`
-            SELECT teamId, date, Team.teamName FROM Training
+            SELECT teamId, startDate, stopDate, Team.teamName FROM Training
             JOIN Team ON Team.id = Training.teamId
-            ORDER BY date ASC
+            JOIN Club ON Club.id = Team.clubId
+            WHERE Club.id = ?
+            ORDER BY startDate ASC
         `, [req.params.id]);
 
         res.json(activities);
@@ -165,6 +167,8 @@ router.get("/:id/activities", async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+
 
 // Add new club
 
