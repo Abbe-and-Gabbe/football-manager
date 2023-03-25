@@ -70,12 +70,15 @@ router.get("/login", async (req, res) => {
         }
 
         res.send(result[0]);
+        teamStaffConnection.release();
     } else {
         res.send({
             errorCode: "not_found",
             errorMessage: "User not found"
         })
     }
+
+    connection.release();
 })
 
 
