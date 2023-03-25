@@ -13,6 +13,7 @@
   import Calendar from "./lib/Components/Calendar.svelte";
   import ClubCalendar from "./lib/Pages/Club/ClubCalendar/ClubCalendar.svelte";
     import TeamCalendar from "./lib/Pages/Team/TeamCalendar.svelte";
+    import News from "./lib/Pages/News/News.svelte";
   export let url = "";
 </script>
 
@@ -52,6 +53,10 @@
 
     <Route path="/team/:id/calendar" let:params>
       <TeamCalendar id={params.id} />
+    </Route>
+
+    <Route path="/news/:id" let:params>
+      <News id={params.id} />
     </Route>
   </main>
 </Router>
