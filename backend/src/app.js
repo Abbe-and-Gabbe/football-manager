@@ -1,12 +1,14 @@
 import express from "express";
 import cors from "cors";
-//const jwt = require('jsonwebtoken')
-//const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
- 
+// const jwt = require('jsonwebtoken')
+const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
+
 // Route imports
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
 import clubRouter from "./routes/club.js";
+import authRouter from "./routes/auth.js";
+
 import { request } from "https";
 
 const PORT = 8080;
@@ -25,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/person", personRouter);
 app.use("/team", teamRouter)
 app.use("/club", clubRouter)
+app.use("/auth", authRouter)
 
 //login
 /*
