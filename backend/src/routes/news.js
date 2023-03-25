@@ -63,22 +63,22 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   let id = req.params.id;
   let newsData = req.body;
-  console.log(`Edit news article ${id}`);
+  console.log(
+    `Edit news article ${id} for person with id: ${newsData.personId}`
+  );
   try {
     const connection = await pool.getConnection();
     const query = `
-          UPDATE News
-          SET teamId = ?, title = ?, content = ?, published = ?
-          WHERE id = ?
-          AND personId = ?
-        `;
+                UPDATE News
+                SET teamId = ?, title = ?, content = ?, published = ?
+                WHERE id = ?
+              `;
     const result = await connection.query(query, [
       newsData.teamId,
       newsData.title,
       newsData.content,
       newsData.published,
       id,
-      newsData.personId,
     ]);
     connection.release();
     if (result.affectedRows === 0) {
@@ -88,9 +88,19 @@ router.put("/:id", async (req, res) => {
         errorMessage: "News article not found",
       });
     } else {
-      res.send({
-        message: "News article updated successfully",
-      });
+      // Check if the updated news article belongs to the user who made the request
+      const updatedNewsArticle = await getNewsArticleById(id);
+      if (updatedNewsArticle.personId !== newsData.personId) {
+        res.status(403);
+        res.send({
+          errorCode: "forbidden",
+          errorMessage: "You are not authorized to update this news article",
+        });
+      } else {
+        res.send({
+          message: "News article updated successfully",
+        });
+      }
     }
   } catch (err) {
     console.error(err);
@@ -106,8 +116,9 @@ router.delete("/:id", async (req, res) => {
   let id = req.params.id;
   try {
     const connection = await pool.getConnection();
-    const query = "DELETE FROM News WHERE id = ? AND personId = ?";
-    const result = await connection.query(query, [id, newsData.personId]);
+    const query = "DELETE FROM News WHERE id = ?";
+    const result = await connection.query(query, [id]);
+
     connection.release();
     if (result.affectedRows === 0) {
       res.status(404);
