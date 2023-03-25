@@ -3,6 +3,7 @@ import { pool } from "../db.js";
 
 const router = Router();
 
+//get specific news article
 router.get("/:id", async (req, res) => {
   let id = req.params.id;
   let data = {};
@@ -28,6 +29,8 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
+
+//create new news article
 
 router.post("/", async (req, res) => {
   let newsData = req.body;
@@ -59,6 +62,8 @@ router.post("/", async (req, res) => {
     });
   }
 });
+
+//edit news article
 
 router.put("/:id", async (req, res) => {
   let id = req.params.id;
@@ -112,6 +117,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//delete news article
 router.delete("/:id", async (req, res) => {
   let id = req.params.id;
   try {
