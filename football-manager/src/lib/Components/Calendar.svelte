@@ -162,8 +162,15 @@
             {#each games.filter((game) => new Date(game.date).toDateString() === day.toDateString()) as game, index}
               <div style={index > 0 ? "margin-top: 10px;" : ""}>
                 <p>
-                  {game.homeTeam} vs {game.awayTeam}
-                  {game.date}
+                  Match: {game.homeTeam} vs {game.awayTeam}
+                </p>
+              </div>
+            {/each}
+
+            {#each active.filter((act) => new Date(act.startDate).toDateString() === day.toDateString()) as act, index}
+              <div style={index > 0 ? "margin-top: 10px;" : ""}>
+                <p>
+                  Training: {act.teamName}
                 </p>
               </div>
             {/each}
