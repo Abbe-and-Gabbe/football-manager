@@ -10,6 +10,7 @@ import clubRouter from "./routes/club.js";
 import newsRouter from "./routes/news.js";
 import { request } from "https";
 
+
 const PORT = 8080;
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/person", personRouter);
 app.use("/team", teamRouter)
 app.use("/club", clubRouter)
 app.use("/news", newsRouter)
+
 
 //login
 /*
