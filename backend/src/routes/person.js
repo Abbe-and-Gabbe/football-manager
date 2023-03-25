@@ -34,6 +34,36 @@ router.get("/:id/news", async(req, res) => {
     }
 });
 
+
+router.delete("/:id/news/:newsId", async (req, res) => {
+let id = req.params.id;
+let newsId = req.params.newsId;
+try {
+const connection = await pool.getConnection();
+const query = 'DELETE FROM News WHERE id = ? AND personId = ?' 
+const result = await connection.query(query, [newsId, id]);
+connection.release();
+if (result.affectedRows === 0) {
+res.status(404);
+res.send({
+errorCode: "not_found",
+errorMessage: "News article not found"
+});
+} else {
+res.send({
+message: "News article deleted successfully"
+});
+}
+} catch (err) {
+console.error(err);
+res.status(500);
+res.send({
+errorCode: "internal_server_error",
+errorMessage: "Failed to delete news article"
+});
+}
+});
+
 router.get("/:id/activites", async (req, res) => {
     let id = req.params.id;
     let data = {}
