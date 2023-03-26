@@ -200,6 +200,38 @@ router.get("/:id/activities", async (req, res) => {
     }
 });
 
+router.post("/:id/add-news", async (req, res) => {
+    console.log("POST /team/:id/add-news")
+    console.log(req.body);
+
+    const { title, content } = req.body;
+
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            INSERT INTO News (title, content, published, PersonId, TeamId)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+
+        const published = new Date()
+
+        console.log(query);
+
+        connection.query(query, [title || "Hej", content || "Hej", published, req.body.PersonId || 1, req.params.id]);
+        connection.release();
+        res.send({
+            success: true,
+            message: "News item added"
+        });
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+
 
 
 
