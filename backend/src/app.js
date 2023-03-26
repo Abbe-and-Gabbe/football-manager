@@ -19,7 +19,7 @@ const PORT = 8080;
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3030",
+    origin: "*",
 }));
 
 app.use(express.json())

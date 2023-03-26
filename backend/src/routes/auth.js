@@ -79,6 +79,8 @@ router.get("/login", async (req, res) => {
             expiresIn: 86400 // 24 hours
         });
 
+        result[0].loggedIn = true;
+
         console.log(result[0])
 
         res.send(result[0]);

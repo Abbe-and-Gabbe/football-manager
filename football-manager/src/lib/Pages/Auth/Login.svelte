@@ -27,7 +27,9 @@
       }
 
       // Redircet to home page without losing the user writable
+      if($user.id) {
         navigate('/', {replace: true});
+      }
 
       console.log($user);
     }).catch((err) => {
