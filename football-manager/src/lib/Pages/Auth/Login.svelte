@@ -2,9 +2,37 @@
   let email = '';
   let password = '';
 
+  import {user} from "../../user-store";
+  import { navigate} from 'svelte-routing';
+
+
   function handleSubmit() {
     console.log(`Logging in with email=${email} and password=${password}`);
-    // You can add your own logic here to submit the login information to a server or perform other actions.
+
+    const f = fetch(`http://localhost:8080/auth/login?email=${email}&password=${password}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+    f.then((res) => {
+        return res.json();
+    }).then((data) => {
+      console.log(data);
+      $user = {
+        id: data.id,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        JWT: data.JWT
+      }
+
+      // Redircet to home page without losing the user writable
+        navigate('/', {replace: true});
+
+      console.log($user);
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 </script>
 

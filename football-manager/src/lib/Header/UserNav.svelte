@@ -1,41 +1,29 @@
 <script>
-  import { user } from "../../user-store.js";
+  import {user} from "../user-store"
+  import {link} from "svelte-routing";
   // This will be changed later when the backend is implemented
   let username = "";
   let password = "";
-  async function login() {
-    const response = await fetch("http://localhost:8080/tokens", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `grant_type=password&username=${encodeURIComponent(
-        username
-      )}&password=${encodeURIComponent(password)}`,
-    });
 
-    // TODO: Need to check status code, etc.
-    const body = await response.json();
+  console.log($user);
 
-    const accessToken = body.access_token;
 
-    $user = {
-      isLoggedIn: true,
-      accessToken,
-    };
-  }
 </script>
 
-<form on:submit|preventDefault={login}>
-  <div>
-    Username:
-    <input type="text" bind:value={username} />
-  </div>
-
-  <div>
-    Password:
-    <input type="password" bind:value={password} />
-  </div>
-
-  <input type="submit" value="Login" />
-</form>
+<div class="flex gap-2 prose dark:prose-invert">
+  {#if $user.JWT}
+    <div>
+      <p>{$user.firstName} {$user.lastName}</p>
+    </div>
+    <div>
+      <p>Logout</p>
+    </div>
+  {:else}
+    <div>
+      <a href="/login" use:link>Login</a>
+    </div>
+    <div>
+      <a href="/register" use:link>Register</a>
+    </div>
+  {/if}
+</div>

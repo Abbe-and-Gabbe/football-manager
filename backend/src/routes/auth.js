@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { pool } from "../db.js"
+import Jwt from "jsonwebtoken";
 
 const router = Router();
+
+const SECRET_TOKEN = "verySecretToken" 
 
 router.post("/signup", async (req, res) => {
     // Check if email already exists
@@ -46,6 +49,7 @@ router.post("/signup", async (req, res) => {
 
 router.get("/login", async (req, res) => {
     const { email, password } = req.query;
+    console.log("Login attempt: " + email + " " + password)
 
     // Hash the password
 
@@ -68,6 +72,14 @@ router.get("/login", async (req, res) => {
         } else {
             result[0].isStaff = false;
         }
+
+        // Generate token
+
+        result[0].JWT = Jwt.sign({ id: result[0].id }, SECRET_TOKEN, {
+            expiresIn: 86400 // 24 hours
+        });
+
+        console.log(result[0])
 
         res.send(result[0]);
         teamStaffConnection.release();
