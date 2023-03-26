@@ -8,7 +8,6 @@
     })
         .then((data) => {
             person = data;
-            console.log(person);
         })
         .catch((error) => {
             console.error(error);

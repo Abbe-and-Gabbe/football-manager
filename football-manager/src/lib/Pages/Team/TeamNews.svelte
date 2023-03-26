@@ -19,6 +19,13 @@
 
 <section class="animate-fade-in flex-col mt-10">
   <!-- TODO Add links -->
+   <a href="/team/{id}/add-news" use:link>
+      <button
+        class="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-full"
+      >
+        Create News  
+      </button>
+    </a>
   {#if news}
     {#each news as item (item.id)}
       <a href={"/news/" + item.id} use:link>
