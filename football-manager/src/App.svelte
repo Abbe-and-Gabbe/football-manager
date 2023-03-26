@@ -18,6 +18,7 @@
     import Login from "./lib/Pages/Auth/Login.svelte";
     import AddNews from "./lib/Pages/Team/AddNews.svelte";
     import AddPlayer from "./lib/Pages/Team/AddPlayer.svelte";
+    import Signup from "./lib/Pages/Auth/Signup.svelte";
   export let url = "";
 </script>
 
@@ -28,6 +29,7 @@
   >
     <Route path="/" component={Home} />
     <Route path="/login" component={Login} />
+    <Route path="/signup" component={Signup} />
     <Route path="/club/:id" let:params>
       <Club id={params.id} />
     </Route>
