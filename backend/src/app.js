@@ -18,11 +18,12 @@ const PORT = 8080;
 
 const app = express();
 
-// Enable cors for all origins
 app.use(cors({
-    origin: "*"
+    origin: "http://localhost:3030",
 }));
-app.use(express.json());
+
+app.use(express.json())
+
 
 app.use(express.urlencoded())
 
