@@ -9,7 +9,6 @@ const SECRET_TOKEN = "verySecretToken"
 
 router.post("/signup", async (req, res) => {
     // Check if email already exists
-
     if (await checkIfUserHasAccount(req.query.email)) {
         res.status(409);
         res.send({
