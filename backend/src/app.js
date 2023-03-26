@@ -1,13 +1,16 @@
 import express from "express";
 import cors from "cors";
-//const jwt = require('jsonwebtoken')
-//const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
- 
+// const jwt = require('jsonwebtoken')
+const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
+
 // Route imports
 import personRouter from "./routes/person.js";
 import teamRouter from "./routes/team.js";
 import clubRouter from "./routes/club.js";
 import newsRouter from "./routes/news.js";
+
+import authRouter from "./routes/auth.js";
+
 import { request } from "https";
 
 
@@ -29,6 +32,8 @@ app.use("/team", teamRouter)
 app.use("/club", clubRouter)
 app.use("/news", newsRouter)
 
+
+app.use("/auth", authRouter)
 
 //login
 /*

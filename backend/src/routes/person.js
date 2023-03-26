@@ -7,12 +7,13 @@ const router = Router();
 // id is the id of the person logged in
 
 router.get("/:id/news", async (req, res) => {
-  let id = req.params.id;
-  let data = {};
-  console.log("Get news for person with id: " + id);
-  try {
-    const connection = await pool.getConnection();
-    const query = `
+
+    let id = req.params.id;
+    let data = {}
+    console.log("Get news for person with id: " + id);
+    try {
+        const connection = await pool.getConnection();
+        const query = `
                         SELECT n.id, n.personId, n.title, n.content, n.published, n.teamId, Person.firstName, Person.lastName FROM News as n
                         JOIN TeamPlayer ON n.teamId = TeamPlayer.teamId
                         JOIN TeamStaff ON n.teamId = TeamStaff.teamId
@@ -107,20 +108,21 @@ router.get("/:id/activites", async (req, res) => {
 });
 
 // Return a person with the given id, the data is joined with the teams
-// where the person has a role, both player and staff roles.
+
+// where the person has a role, both player and staff roles. 
 
 router.get("/:id", async (req, res) => {
-  let data = {};
-  console.log("Get person with id: " + req.params.id);
-  try {
-    const connection = await pool.getConnection();
-    // Select the person with the id and join PlayerTeam and Team tables
-    const personQuery = "SELECT * FROM Person WHERE id = ?";
-    const person = await connection.query(personQuery, [req.params.id]);
-    data = person[0];
-    data.password = "*********";
-    // Select the teams the person is in
-    const playerTeamsQuery = `
+    let data = {}
+    console.log("Get person with id: " + req.params.id);
+    try {
+        const connection = await pool.getConnection();
+        // Select the person with the id and join PlayerTeam and Team tables
+        const personQuery = "SELECT * FROM Person WHERE id = ?";
+        const person = await connection.query(personQuery, [req.params.id]);
+        data = person[0];
+        data.password = "*********";
+        // Select the teams the person is in
+        const playerTeamsQuery = `
                 SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team
                 JOIN TeamPlayer ON Team.id = TeamPlayer.teamId
                 JOIN Club ON Team.clubId = Club.id
@@ -139,20 +141,38 @@ router.get("/:id", async (req, res) => {
                 JOIN TeamStaff ON Team.id = TeamStaff.teamId
                 JOIN Club ON Team.clubId = Club.id
                 WHERE TeamStaff.PersonId = ?
-                    `;
-    const staffTeams = await connection.query(staffTeamsQuery, [req.params.id]);
 
-    data.staffTeams = staffTeams;
+                    `
+        const staffTeams = await connection.query(staffTeamsQuery, [req.params.id]);
 
-    connection.release();
-    res.send(data);
-  } catch (err) {
-    res.status(404);
-    res.send({
-      errorCode: "not_found",
-      errorMessage: "Person not found",
-    });
-  }
+        data.staffTeams = staffTeams;
+
+        // Get the persons stats from PlayerGame and sum them up
+        // plus count the number of games played
+        // const statsQuery = `
+        //         SELECT SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM PlayerGame
+        //         WHERE PlayerGame.PersonId = ?
+        //                     `
+
+        const statsQuery = `
+        SELECT PlayerGame.PersonId, SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM PlayerGame
+        WHERE PlayerGame.PersonId = ?
+                    `
+
+        const stats = await connection.query(statsQuery, [req.params.id]);
+        data.stats = stats[0];
+
+        console.log(data.stats)
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found"
+        })
+    }
 });
 
 // Gets all persons from the database, no joins are made
@@ -174,6 +194,7 @@ router.get("/", async (req, res) => {
       errorCode: "server_error",
     });
   }
+
 });
 
 export default router;

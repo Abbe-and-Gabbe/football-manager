@@ -12,6 +12,9 @@
   import Squad from "./lib/Pages/Team/Squad.svelte";
   import Calendar from "./lib/Components/Calendar.svelte";
   import ClubCalendar from "./lib/Pages/Club/ClubCalendar/ClubCalendar.svelte";
+    import TeamCalendar from "./lib/Pages/Team/TeamCalendar.svelte";
+    import News from "./lib/Pages/News/News.svelte";
+    import Person from "./lib/Pages/Person/Person.svelte";
   export let url = "";
 </script>
 
@@ -50,7 +53,15 @@
     </Route>
 
     <Route path="/team/:id/calendar" let:params>
-      <ClubCalendar id={params.id} />
+      <TeamCalendar id={params.id} />
+    </Route>
+
+    <Route path="/news/:id" let:params>
+      <News id={params.id} />
+    </Route>
+
+    <Route path="/person/:id" let:params>
+      <Person id={params.id} />
     </Route>
   </main>
 </Router>
