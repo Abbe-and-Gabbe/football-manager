@@ -6,7 +6,7 @@ const router = Router();
 // Get the news for every team the person is in
 // id is the id of the person logged in
 
-router.get("/:id/news", async(req, res) => {
+router.get("/:id/news", async (req, res) => {
     let id = req.params.id;
     let data = {}
     console.log("Get news for person with id: " + id);
@@ -110,7 +110,7 @@ router.get("/:id/activites", async (req, res) => {
 // Return a person with the given id, the data is joined with the teams
 // where the person has a role, both player and staff roles. 
 
-router.get("/:id", async(req, res) => {
+router.get("/:id", async (req, res) => {
     let data = {}
     console.log("Get person with id: " + req.params.id);
     try {
@@ -143,6 +143,23 @@ router.get("/:id", async(req, res) => {
 
         data.staffTeams = staffTeams;
 
+        // Get the persons stats from PlayerGame and sum them up
+        // plus count the number of games played
+        // const statsQuery = `
+        //         SELECT SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM PlayerGame
+        //         WHERE PlayerGame.PersonId = ?
+        //                     `
+
+        const statsQuery = `
+        SELECT PlayerGame.PersonId, SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM PlayerGame
+        WHERE PlayerGame.PersonId = ?
+                    `
+
+        const stats = await connection.query(statsQuery, [req.params.id]);
+        data.stats = stats[0];
+
+        console.log(data.stats)
+
         connection.release();
         res.send(data);
     } catch (err) {
@@ -159,7 +176,7 @@ router.get("/:id", async(req, res) => {
 // Gets all persons from the database, no joins are made
 // This will probably only be useful for admins
 
-router.get("/", async(req, res) => {
+router.get("/", async (req, res) => {
     let data = {}
     console.log("Get all persons");
     try {

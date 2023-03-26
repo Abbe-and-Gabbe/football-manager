@@ -145,6 +145,60 @@ router.get("/:id/news", async (req, res) => {
     }
 });
 
+// Returns all the matches for the team with the given id
+
+router.get("/:id/games", async (req, res) => {
+    let data = {}
+    console.log(req.params.id);
+    try {
+        const connection = await pool.getConnection();
+        // Get all games, then set teamHome and teamAway to the
+        // team name instead of the id
+
+        const query = `
+            SELECT Game.id, Game.homeScore, Game.date, Game.awayScore, TeamHome.teamName AS "homeTeam", TeamAway.teamName AS "awayTeam" FROM Game	
+            JOIN Team AS TeamHome ON Game.homeTeam = TeamHome.id
+            JOIN Team AS TeamAway ON Game.awayTeam = TeamAway.id
+            WHERE Game.homeTeam = ? OR Game.awayTeam = ?
+            ORDER BY Game.date DESC
+        `;
+        data = await connection.query(query, [req.params.id, req.params.id]);
+
+
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
+
+// Returns all trainings for the team with the given id
+
+router.get("/:id/activities", async (req, res) => {
+    let data = {}
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            SELECT Training.id, Training.startDate, Training.stopDate, Team.teamName FROM Training
+            JOIN Team ON Training.TeamId = Team.id
+            WHERE Training.TeamId = ?
+            ORDER BY Training.startDate DESC
+        `;
+        data = await connection.query(query, [req.params.id]);
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Team not found"
+        })
+    }
+});
 
 
 

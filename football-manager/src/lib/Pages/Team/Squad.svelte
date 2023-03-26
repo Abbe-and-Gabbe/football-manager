@@ -1,4 +1,5 @@
 <script>
+  import { link } from "svelte-routing";
   import Person from "./Person.svelte";
   import TeamNavbar from "./TeamNavbar.svelte";
 
@@ -37,7 +38,9 @@
     </div>
     {#if players}
       {#each players as person (person.id)}
-        <Person {person} />
+        <a href={"/person/" + person.id} use:link>
+          <Person {person} />
+        </a>
       {/each}
     {/if}
   </section>
