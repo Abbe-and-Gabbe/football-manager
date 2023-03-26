@@ -22,28 +22,28 @@ router.get("/:id/news", async (req, res) => {
                         OR TeamStaff.personId = ?
                         GROUP BY n.id
                         `;
-    const news = await connection.query(query, [id, id]);
-    data = news;
-    connection.release();
-    res.send(data);
-  } catch (err) {
-    res.status(404);
-    res.send({
-      errorCode: "not_found",
-      errorMessage: "Person not found",
-    });
-  }
+        const news = await connection.query(query, [id, id]);
+        data = news;
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found",
+        });
+    }
 });
 
 
 
 router.get("/:id/activites", async (req, res) => {
-  let id = req.params.id;
-  let data = {};
-  console.log("Get activities for person with id: " + id);
-  try {
-    const connection = await pool.getConnection();
-    const query = `
+    let id = req.params.id;
+    let data = {};
+    console.log("Get activities for person with id: " + id);
+    try {
+        const connection = await pool.getConnection();
+        const query = `
                         SELECT id, startDate, stopDate, "Training" as type FROM Training
                         WHERE teamId IN (
                             SELECT teamId FROM TeamPlayer
@@ -55,9 +55,9 @@ router.get("/:id/activites", async (req, res) => {
                         )
                         ORDER BY startDate DESC
                         `;
-    const activities = await connection.query(query, [id, id]);
+        const activities = await connection.query(query, [id, id]);
 
-    const queryGames = `
+        const queryGames = `
                             SELECT id, homeTeam, awayTeam, homeScore, awayScore, date as startDate, "Game" as type FROM Game
                             WHERE homeTeam IN (
                                 SELECT teamId FROM TeamPlayer
@@ -78,33 +78,33 @@ router.get("/:id/activites", async (req, res) => {
                             ORDER BY date DESC
                             `;
 
-    const games = await connection.query(queryGames, [id, id, id, id]);
+        const games = await connection.query(queryGames, [id, id, id, id]);
 
-    data = activities.concat(games);
+        data = activities.concat(games);
 
-    // Sort the array by date acsending
-    data.sort((a, b) => {
-      return new Date(a.startDate) - new Date(b.startDate);
-    });
+        // Sort the array by date acsending
+        data.sort((a, b) => {
+            return new Date(a.startDate) - new Date(b.startDate);
+        });
 
-    // Only return the 10 latest activities
-    data = data.slice(0, 10);
+        // Only return the 10 latest activities
+        data = data.slice(0, 10);
 
-    // Only show activities where the date is in the future
-    data = data.filter((activity) => {
-      return new Date(activity.startDate) > new Date();
-    });
+        // Only show activities where the date is in the future
+        // data = data.filter((activity) => {
+        //   return new Date(activity.startDate) > new Date();
+        // });
 
-    connection.release();
-    res.send(data);
-  } catch (err) {
-    console.log(err);
-    res.status(404);
-    res.send({
-      errorCode: "not_found",
-      errorMessage: "Person not found",
-    });
-  }
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        console.log(err);
+        res.status(404);
+        res.send({
+            errorCode: "not_found",
+            errorMessage: "Person not found",
+        });
+    }
 });
 
 // Return a person with the given id, the data is joined with the teams
@@ -129,14 +129,14 @@ router.get("/:id", async (req, res) => {
                 WHERE TeamPlayer.PersonId = ?
                     `;
 
-    // Get the teams where the person is a player
-    const playerTeams = await connection.query(playerTeamsQuery, [
-      req.params.id,
-    ]);
-    data.playerTeams = playerTeams;
+        // Get the teams where the person is a player
+        const playerTeams = await connection.query(playerTeamsQuery, [
+            req.params.id,
+        ]);
+        data.playerTeams = playerTeams;
 
-    // Get the teams where the person is a staff member
-    const staffTeamsQuery = `
+        // Get the teams where the person is a staff member
+        const staffTeamsQuery = `
                 SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
                 JOIN TeamStaff ON Team.id = TeamStaff.teamId
                 JOIN Club ON Team.clubId = Club.id
@@ -179,21 +179,21 @@ router.get("/:id", async (req, res) => {
 // This will probably only be useful for admins
 
 router.get("/", async (req, res) => {
-  let data = {};
-  console.log("Get all persons");
-  try {
-    const connection = await pool.getConnection();
-    const query = "SELECT * FROM Person";
-    const persons = await connection.query(query);
-    data = persons;
-    connection.release();
-    res.send(data);
-  } catch (err) {
-    res.status(500);
-    res.send({
-      errorCode: "server_error",
-    });
-  }
+    let data = {};
+    console.log("Get all persons");
+    try {
+        const connection = await pool.getConnection();
+        const query = "SELECT * FROM Person";
+        const persons = await connection.query(query);
+        data = persons;
+        connection.release();
+        res.send(data);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "server_error",
+        });
+    }
 
 });
 
