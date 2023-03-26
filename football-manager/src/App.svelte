@@ -15,6 +15,7 @@
     import TeamCalendar from "./lib/Pages/Team/TeamCalendar.svelte";
     import News from "./lib/Pages/News/News.svelte";
     import Person from "./lib/Pages/Person/Person.svelte";
+    import Login from "./lib/Pages/Auth/Login.svelte";
     import AddNews from "./lib/Pages/Team/AddNews.svelte";
     import AddPlayer from "./lib/Pages/Team/AddPlayer.svelte";
   export let url = "";
@@ -26,6 +27,7 @@
     class="dark:bg-slate-900 bg-slate-100 dark:text-white p-12 shadow-xl h-full"
   >
     <Route path="/" component={Home} />
+    <Route path="/login" component={Login} />
     <Route path="/club/:id" let:params>
       <Club id={params.id} />
     </Route>

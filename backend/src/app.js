@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-// const jwt = require('jsonwebtoken')
+import jwt from "jsonwebtoken";
 const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
 
 // Route imports
@@ -19,7 +19,7 @@ const PORT = 8080;
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3030",
+    origin: "*",
 }));
 
 app.use(express.json())

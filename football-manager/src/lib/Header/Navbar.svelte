@@ -9,7 +9,7 @@
 >
   <div class="flex justify-between items-center w-full">
     <h1 class="text-2xl font-bold prose dark:prose-invert">Football Manager</h1>
-    <button class="text-2xl font-bold prose">Login</button>
+    <UserNav />
   </div>
   <SearchBar />
 </header>
