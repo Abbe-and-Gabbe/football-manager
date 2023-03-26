@@ -18,7 +18,11 @@ const PORT = 8080;
 
 const app = express();
 
-app.use(cors());
+// Enable cors for all origins
+app.use(cors({
+    origin: "*"
+}));
+app.use(express.json());
 
 app.use(express.urlencoded())
 

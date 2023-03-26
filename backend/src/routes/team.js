@@ -200,6 +200,74 @@ router.get("/:id/activities", async (req, res) => {
     }
 });
 
+router.post("/:id/invite", async (req, res) => {
+    const teamId = req.params.id;
+    const { email } = req.body;
+
+    // Check if the user exists
+
+    if (!await checkIfUserExist(email)) {
+        res.status(400);
+        res.send({
+            errorCode: "user_not_found",
+            errorMessage: "User not found"
+        });
+        return;
+    } else {
+        // Check if the user is already invited
+        if (await checkIfUserIsInvited(teamId, email)) {
+            res.status(400);
+            res.send({
+                errorCode: "already_invited",
+                errorMessage: "User is already invited"
+            });
+            return;
+        } else {
+            // Add the user to the PlayerTeam table
+            const connection = await pool.getConnection();
+            const query = "INSERT INTO TeamPlayer (TeamId, PersonId) VALUES (?, (SELECT id FROM Person WHERE email = ?))";
+
+            connection.query(query, [teamId, email]);
+            connection.release();
+            res.send({
+                success: true
+            });
+        }
+    }
+});
+
+async function checkIfUserIsInvited(teamId, email) {
+    console.log("teamId: " + teamId);
+    console.log("email: " + email);
+    const conn = await pool.getConnection();
+    const query = "SELECT * FROM TeamPlayer WHERE TeamId = ? AND PersonId = (SELECT id FROM Person WHERE email = ?)";
+
+    const user = await conn.query(query, [teamId, email]);
+
+    conn.release();
+
+    if (user.length === 0) {
+        return false;
+    }
+    return true;
+}
+
+async function checkIfUserExist(email) {
+
+    const conn = await pool.getConnection();
+    const query = "SELECT * FROM Person WHERE email = ?";
+
+    const user = await conn.query(query, [email]);
+
+    conn.release();
+
+    if (user.length === 0) {
+        return false;
+    }
+
+    return true
+}
+
 
 
 
