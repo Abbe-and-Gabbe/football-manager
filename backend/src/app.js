@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-// const jwt = require('jsonwebtoken')
+import jwt from "jsonwebtoken";
 const ACCESS_TOKEN_SECRET = "ablkdjflksjdflsdjf"
 
 // Route imports
