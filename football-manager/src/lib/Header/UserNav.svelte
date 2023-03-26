@@ -23,7 +23,7 @@
       <a href="/login" use:link>Login</a>
     </div>
     <div>
-      <a href="/register" use:link>Register</a>
+      <a href="/signup" use:link>Register</a>
     </div>
   {/if}
 </div>

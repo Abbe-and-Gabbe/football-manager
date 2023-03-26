@@ -30,7 +30,7 @@ router.post("/signup", async (req, res) => {
 
         console.log(password)
 
-        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password, req.query.firebaseId]);
+        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password, req.query.firebaseId || null]);
         connection.release();
 
         // Return the new user id from the database
