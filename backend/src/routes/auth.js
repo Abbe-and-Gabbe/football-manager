@@ -30,7 +30,7 @@ router.post("/signup", async (req, res) => {
 
         console.log(password)
 
-        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password, req.query.firebaseId]);
+        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password, req.query.firebaseId || null]);
         connection.release();
 
         // Return the new user id from the database
@@ -70,7 +70,7 @@ router.get("/login", async (req, res) => {
 
     if (result.length > 0) {
         console.log(result[0])
-        // Check if password is correct
+            // Check if password is correct
 
         let passwordCorrect
 
