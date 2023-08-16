@@ -20,7 +20,7 @@ router.post("/signup", async (req, res) => {
     } else {
         // Create new user
         const connection = await pool.getConnection();
-        const query = "INSERT INTO Person (firstName, lastName, email, password, firebaseId) VALUES (?, ?, ?, ?, ?)"
+        const query = "INSERT INTO Person (firstName, lastName, email, password) VALUES (?, ?, ?, ?)"
 
         // Decrypt password
         let password = req.query.password;
@@ -30,12 +30,12 @@ router.post("/signup", async (req, res) => {
 
         console.log(password)
 
-        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password, req.query.firebaseId || null]);
+        connection.query(query, [req.query.firstName, req.query.lastName, req.query.email, password]);
         connection.release();
 
         // Return the new user id from the database
         const newConnection = await pool.getConnection();
-        const newQuery = "SELECT id, firstName, lastName, firebaseId FROM Person WHERE email = ?"
+        const newQuery = "SELECT id, firstName, lastName FROM Person WHERE email = ?"
         const result = await newConnection.query(newQuery, [req.query.email]);
         newConnection.release();
 
@@ -64,7 +64,7 @@ router.get("/login", async (req, res) => {
     // Hash the password
 
     const connection = await pool.getConnection();
-    const query = "SELECT id, firstName, lastName, firebaseId, password FROM Person WHERE email = ?"
+    const query = "SELECT id, firstName, lastName, password FROM Person WHERE email = ?"
 
     const result = await connection.query(query, [email]);
 
