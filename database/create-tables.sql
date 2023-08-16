@@ -5,9 +5,6 @@ CREATE TABLE person (
   email VARCHAR(254),
   gender VARCHAR(255),
   phoneNumber VARCHAR(15),
-  firebaseId VARCHAR(255)
-  /*Do we use it?*/
-,
   password VARCHAR(255)
 );
 CREATE TABLE club (
