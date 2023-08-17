@@ -3,13 +3,11 @@ import { pool } from "../db.js";
 
 const router = Router();
 
-// Returns all the clubs
-
 router.get("/", async (req, res) => {
   console.log("GET /club");
   try {
     const conn = await pool.getConnection();
-    const clubs = await conn.query("SELECT * FROM Club");
+    const clubs = await conn.query("SELECT * FROM club");
     console.log(clubs);
     res.json(clubs);
   } catch (err) {
@@ -18,116 +16,141 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Returns a club with the given id
-
 router.get("/:id", async (req, res) => {
   console.log("GET /club/:id");
-  let data = {};
+  let clubData = {};
   try {
     const conn = await pool.getConnection();
-    const club = await conn.query("SELECT * FROM Club WHERE id = ?", [
+
+    const club = await conn.query("SELECT * FROM club WHERE id = ?", [
       req.params.id,
     ]);
-    data.club = club[0];
-    const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [
+    if (club.length === 0) {
+      return res.status(404).json({ message: "Club not found" });
+    }
+    clubData.club = club[0];
+
+    const teams = await conn.query("SELECT * FROM team WHERE clubId = ?", [
       req.params.id,
     ]);
-    data.teams = teams;
-    console.log(data);
-    res.json(data);
+    clubData.teams = teams;
+
+    console.log(clubData);
+    res.json(clubData);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message, errorCode: err.errno });
+
+    res.status(500).json({
+      message: "An internal server error occurred. Please try again later.",
+    });
   }
 });
 
-//Get teams related to the club
+
+
+
 router.get("/:id/teams", async (req, res) => {
   console.log("GET /club/:id/teams");
-  let data = {};
+  let teamsData = {};
   try {
     const conn = await pool.getConnection();
-    const teams = await conn.query("SELECT * FROM Team WHERE clubId = ?", [
+    const teams = await conn.query("SELECT * FROM team WHERE clubId = ?", [
       req.params.id,
     ]);
-    data.teams = teams;
-    console.log(data);
-    res.json(data);
+
+    if (teams.length === 0) {
+      return res.status(404).json({ message: "No teams found for this club." });
+    }
+
+    teamsData.teams = teams;
+    console.log(teamsData);
+    res.json(teamsData);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message, errorCode: err.errno });
+
+    res.status(500).json({
+      message: "An internal server error occurred while fetching teams.",
+    });
   }
 });
 
-// Get the news for all the teams in a club
+
 router.get("/:id/news", async (req, res) => {
   try {
     const conn = await pool.getConnection();
     const news = await conn.query(
       `
-            SELECT News.id,title, content, published, personId, Person.firstName, Person.lastName, Team.teamName FROM Team
-            JOIN News ON Team.id = News.teamId
-            JOIN Person ON Person.id = News.personId
-            WHERE Team.clubId = ?
-            ORDER BY published DESC
-        `,
+        SELECT news.id, title, content, published, personId, person.firstName, person.lastName, team.teamName FROM team
+        JOIN news ON team.id = news.teamId
+        JOIN person ON person.id = news.personId
+        WHERE team.clubId = ?
+        ORDER BY published DESC
+      `,
       [req.params.id]
     );
+
+    if (news.length === 0) {
+      return res.status(404).json({ message: "No news articles found for this club." });
+    }
+
     console.log(news);
     res.json(news);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err.message });
+
+    res.status(500).json({
+      message: "An internal server error occurred while fetching news articles.",
+    });
   }
 });
 
-//contact person
+
 router.get("/:id/contact", async (req, res) => {
   console.log("/:id/contact");
-  let data = {};
   try {
     const connection = await pool.getConnection();
     const query = `
-        SELECT firstName, lastName, email, phoneNumber, teamName, role FROM Person
-        JOIN TeamStaff ON Person.id = TeamStaff.PersonId
-        JOIN Team ON Team.id = TeamStaff.TeamId
-        WHERE TeamStaff.TeamId = ? AND TeamStaff.role = "Head Coach"
-        `;
+      SELECT person.firstName, person.lastName, person.email, person.phoneNumber, team.teamName, teamStaff.role
+      FROM person
+      JOIN teamStaff ON person.id = teamStaff.personId
+      JOIN team ON team.id = teamStaff.teamId
+      WHERE team.id = ? AND teamStaff.role = "Head Coach"
+    `;
 
-    data = await connection.query(query, [req.params.id]);
-    // Hide all passwords
-
-    data.forEach((person) => {
-      person.password = "*********";
-    });
+    const data = await connection.query(query, [req.params.id]);
 
     connection.release();
-    res.send(data);
+
+    // Check if any contact persons were found
+    if (data.length === 0) {
+      return res.status(404).json({ message: "No contact person (Head Coach) found for this team." });
+    }
+
+    res.json(data);
   } catch (err) {
-    res.status(500);
-    res.send({
-      errorCode: "not_found",
-      errorMessage: "Team not found",
+    console.log(err);
+    res.status(500).json({
+      errorCode: "internal_error",
+      errorMessage: "An internal server error occurred while fetching contact person.",
     });
   }
 });
 
-// Get the upcoming matches for all the teams in a club
 
 router.get("/:id/games", async (req, res) => {
   try {
     const conn = await pool.getConnection();
     const games = await conn.query(
       `
-            SELECT * FROM Game
-            WHERE (homeTeam IN (SELECT id FROM Team WHERE clubId = ?) OR awayTeam IN (SELECT id FROM Team WHERE clubId = ?))
+            SELECT * FROM game
+            WHERE (homeTeamId IN (SELECT id FROM team WHERE clubId = ?) OR awayTeamId IN (SELECT id FROM team WHERE clubId = ?))
             ORDER BY date ASC
         `,
       [req.params.id, req.params.id]
     );
     const homeTeam = await conn.query(
       `
-            SELECT id, teamName FROM Team
+            SELECT id, teamName FROM team
             WHERE clubId = ?
         `,
       [req.params.id]
@@ -135,7 +158,7 @@ router.get("/:id/games", async (req, res) => {
     const awayTeam = await conn.query(
       `
 
-            SELECT id, teamName FROM Team
+            SELECT id, teamName FROM team
             WHERE clubId = ?
         `,
       [req.params.id]
@@ -155,48 +178,47 @@ router.get("/:id/games", async (req, res) => {
 
     res.json(games);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An internal server error occurred while fetching games." });
   }
 });
 
-// Get upcoming activities for all the teams in a club
 
 router.get("/:id/activities", async (req, res) => {
-
-    try {
-        const conn = await pool.getConnection();
-        const activities = await conn.query(`
-            SELECT teamId, startDate, stopDate, Team.teamName FROM Training
-            JOIN Team ON Team.id = Training.teamId
-            JOIN Club ON Club.id = Team.clubId
-            WHERE Club.id = ?
+  try {
+    const conn = await pool.getConnection();
+    const activities = await conn.query(`
+            SELECT teamId, startDate, stopDate, team.teamName FROM training
+            JOIN team ON team.id = training.teamId
+            JOIN club ON club.id = team.clubId
+            WHERE club.id = ?
             ORDER BY startDate ASC
         `, [req.params.id]);
 
-        res.json(activities);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    res.status(200).json(activities);
+  } catch (err) {
+    res.status(500).json({ error: "Could not fetch activities" });
+  }
 });
 
 
 
-// Add new club
+
 
 router.post("/", async (req, res) => {
   let clubName = req.query.clubName.toString();
   try {
     const conn = await pool.getConnection();
-    const result = await conn.query("INSERT INTO Club (clubName) VALUES (?)", [
+    const result = await conn.query("INSERT INTO club (clubName) VALUES (?)", [
       clubName,
     ]);
     console.log(result);
-    res.json("Club added successfully");
+    res.status(201).json("Club added successfully");
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Something went wrong", errorCode: err.errno });
+      .json({ error: "Something went wrong", errorCode: err.errno });
   }
 });
+
 
 export default router;
