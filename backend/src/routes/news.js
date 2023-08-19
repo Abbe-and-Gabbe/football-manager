@@ -3,43 +3,48 @@ import { pool } from "../db.js";
 
 const router = Router();
 
-//get specific news article
 router.get("/:id", async (req, res) => {
   let id = req.params.id;
-  let data = {};
+  let newsArticleData = {};
   try {
     const connection = await pool.getConnection();
     const query = `
-        SELECT News.title, News.content, News.published, Person.firstName, Person.lastName
-        FROM News 
-        JOIN Person ON News.PersonId = Person.id
-        WHERE News.id = ?
-
+        SELECT news.title, news.content, news.published, person.firstName, person.lastName
+        FROM news 
+        JOIN person ON news.personId = person.id
+        WHERE news.id = ?
         `;
     const news = await connection.query(query, [id]);
-    data = news[0];
     connection.release();
-    res.send(data);
+
+    if (news.length === 0) {
+      return res.status(404).json({
+        errorCode: "not_found",
+        errorMessage: "News article not found",
+      });
+    }
+
+    newsArticleData = news[0];
+    res.json(newsArticleData);
   } catch (err) {
     console.error(err);
-    res.status(404);
-    res.send({
-      errorCode: "not_found",
-      errorMessage: "News article not found",
+    res.status(500).json({
+      errorCode: "server_error",
+      errorMessage: "Something went wrong on the server side",
     });
   }
 });
 
-//create new news article
+
 
 router.post("/", async (req, res) => {
   let newsData = req.body;
   try {
     const connection = await pool.getConnection();
     const query = `
-          INSERT INTO News (personId, teamId, title, content, published)
-          VALUES (?, ?, ?, ?, ?)
-        `;
+      INSERT INTO news (personId, teamId, title, content, published)
+      VALUES (?, ?, ?, ?, ?)
+    `;
     const result = await connection.query(query, [
       newsData.personId,
       newsData.teamId,
@@ -49,21 +54,19 @@ router.post("/", async (req, res) => {
     ]);
     const newsId = result.insertId;
     connection.release();
-    res.send({
+    res.status(201).json({
       id: newsId,
       message: "News article created successfully",
     });
   } catch (err) {
     console.error(err);
-    res.status(500);
-    res.send({
-      errorCode: "internal_server_error",
+    res.status(500).json({
+      errorCode: "server_error",
       errorMessage: "Failed to create news article",
     });
   }
 });
 
-//edit news article
 
 router.put("/:id", async (req, res) => {
   let id = req.params.id;
@@ -74,7 +77,7 @@ router.put("/:id", async (req, res) => {
   try {
     const connection = await pool.getConnection();
     const query = `
-                UPDATE News
+                UPDATE news
                 SET teamId = ?, title = ?, content = ?, published = ?
                 WHERE id = ?
               `;
@@ -93,7 +96,6 @@ router.put("/:id", async (req, res) => {
         errorMessage: "News article not found",
       });
     } else {
-      // Check if the updated news article belongs to the user who made the request
       const updatedNewsArticle = await getNewsArticleById(id);
       if (updatedNewsArticle.personId !== newsData.personId) {
         res.status(403);
@@ -122,7 +124,7 @@ router.delete("/:id", async (req, res) => {
   let id = req.params.id;
   try {
     const connection = await pool.getConnection();
-    const query = "DELETE FROM News WHERE id = ?";
+    const query = "DELETE FROM news WHERE id = ?";
     const result = await connection.query(query, [id]);
 
     connection.release();
