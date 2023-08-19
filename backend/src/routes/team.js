@@ -5,8 +5,8 @@ const router = Router();
 
 // Get all teams
 router.get("/", async (req, res) => {
-    console.log("Test")
-    let data = {}
+    let getAllTeamsData = {};
+
     try {
         const connection = await pool.getConnection();
         const query = `
@@ -14,104 +14,105 @@ router.get("/", async (req, res) => {
         JOIN Club ON Team.clubId = Club.id
         `;
 
-        data = await connection.query(query);
+        getAllTeamsData = await connection.query(query);
         connection.release();
-        res.send(data);
+        res.send(getAllTeamsData);
     } catch (err) {
-        res.status(500);
+        res.status(404);
         res.send({
             errorCode: "not_found",
             errorMessage: "Teams not found"
-        })
+        });
     }
 });
+
 
 // Returns the team with the given id, the data is joined with the persons
 // connected to the team, players and staff.
 
 router.get("/:id", async (req, res) => {
-    let data = {}
+    let specificTeamData = {};
+
     try {
         const connection = await pool.getConnection();
-        const query = "SELECT * FROM Team WHERE id = ?"
+        const query = "SELECT * FROM Team WHERE id = ?";
         const team = await connection.query(query, [req.params.id]);
-        data = team;
-        // Hide all passwords
-        // TODO: This should be done in the database
-        data.forEach(person => {
-            person.password = "*********";
-        });
+        specificTeamData = team;
 
         connection.release();
-        res.send(data);
+        if (team.length === 0) {
+            res.status(404);
+            res.send({
+                errorCode: "not_found",
+                errorMessage: "Team not found"
+            });
+        } else {
+            res.status(200).json(specificTeamData);
+        }
     } catch (err) {
         res.status(500);
         res.send({
-            errorCode: "not_found",
-            errorMessage: "Team not found"
-        })
+            errorCode: "internal_server_error",
+            errorMessage: "Failed to fetch team"
+        });
     }
-})
+});
 
 // Returns all the players in the team with the given id
 
 router.get("/:id/players", async (req, res) => {
-    let data = {}
-    try {
-        const connection = await pool.getConnection();
-        const query = "SELECT * FROM Person WHERE id IN (SELECT PersonId FROM TeamPlayer WHERE TeamId = ?)";
+    let playersForSpecificTeamData = {};
 
-        data = await connection.query(query, [req.params.id]);
-        // Hide all passwords
-
-        data.forEach(person => {
-            person.password = "*********";
-        });
-
-        connection.release();
-        res.send(data);
-    } catch (err) {
-        res.status(500);
-        res.send({
-            errorCode: "not_found",
-            errorMessage: "Team not found"
-        })
-    }
-});
-
-// Returns all the staff in the team with the given id
-// TODO: Add documentation
-
-router.get("/:id/staff", async (req, res) => {
-    let data = {}
     try {
         const connection = await pool.getConnection();
         const query = `
-            SELECT * FROM Person
-            JOIN TeamStaff ON Person.id = TeamStaff.PersonId
-            WHERE TeamStaff.TeamId = ?
+            SELECT *
+            FROM person
+            WHERE id IN (SELECT personId FROM teamPlayer WHERE teamId = ?)
         `;
 
-        data = await connection.query(query, [req.params.id]);
-        // Hide all passwords
-
-        data.forEach(person => {
-            person.password = "*********";
-        });
+        playersForSpecificTeamData = await connection.query(query, [req.params.id]);
 
         connection.release();
-        res.send(data);
+        res.send(playersForSpecificTeamData);
     } catch (err) {
         res.status(500);
         res.send({
-            errorCode: "not_found",
-            errorMessage: "Team not found"
-        })
+            errorCode: "internal_server_error",
+            errorMessage: "Failed to fetch players for specific team"
+        });
     }
 });
 
-// Returns all the news items for the team with the given id
-// TODO: Add documentation
+
+
+
+router.get("/:id/staff", async (req, res) => {
+    let staffForSpecificTeamData = {};
+
+    try {
+        const connection = await pool.getConnection();
+        const query = `
+            SELECT * FROM person
+            JOIN teamStaff ON person.id = teamStaff.personId
+            WHERE teamStaff.teamId = ?
+        `;
+
+        staffForSpecificTeamData = await connection.query(query, [req.params.id]);
+
+        connection.release();
+        res.send(staffForSpecificTeamData);
+    } catch (err) {
+        res.status(500);
+        res.send({
+            errorCode: "internal_server_error",
+            errorMessage: "Failed to fetch staff or team"
+        });
+    }
+});
+
+
+
 
 router.get("/:id/news", async (req, res) => {
 
@@ -121,21 +122,20 @@ router.get("/:id/news", async (req, res) => {
         limit = 10;
     }
 
-
     console.log(limit);
-    let data = {}
+    let newsForSpecificTeamData = {}
     try {
         const connection = await pool.getConnection();
         const query = `
-            SELECT News.id, News.title, News.content, News.published, Person.firstName, Person.lastName, Person.id AS "PersonId" FROM News
-            JOIN Person ON News.PersonId = Person.id
-            WHERE News.TeamId = ?
-            ORDER BY News.published DESC
+            SELECT news.id, news.title, news.content, news.published, person.firstName, person.lastName, person.id AS "personId" FROM news
+            JOIN person ON news.personId = person.id
+            WHERE news.teamId = ?
+            ORDER BY news.published DESC
             LIMIT ?
         `;
-        data = await connection.query(query, [req.params.id, limit]);
+        newsForSpecificTeamData = await connection.query(query, [req.params.id, limit]);
         connection.release();
-        res.send(data);
+        res.send(newsForSpecificTeamData);
     } catch (err) {
         res.status(500);
         res.send({
@@ -145,28 +145,26 @@ router.get("/:id/news", async (req, res) => {
     }
 });
 
-// Returns all the matches for the team with the given id
 
 router.get("/:id/games", async (req, res) => {
-    let data = {}
+    let getGamesForSpecificTeam = {}
     console.log(req.params.id);
     try {
         const connection = await pool.getConnection();
-        // Get all games, then set teamHome and teamAway to the
-        // team name instead of the id
+
 
         const query = `
-            SELECT Game.id, Game.homeScore, Game.date, Game.awayScore, TeamHome.teamName AS "homeTeam", TeamAway.teamName AS "awayTeam" FROM Game	
-            JOIN Team AS TeamHome ON Game.homeTeam = TeamHome.id
-            JOIN Team AS TeamAway ON Game.awayTeam = TeamAway.id
-            WHERE Game.homeTeam = ? OR Game.awayTeam = ?
-            ORDER BY Game.date DESC
+            SELECT game.id, game.homeScoreId, game.date, game.awayScoreId, TeamHome.teamName AS "homeTeam", TeamAway.teamName AS "awayTeam" FROM game	
+            JOIN team AS TeamHome ON game.homeTeamId = TeamHome.id
+            JOIN team AS TeamAway ON game.awayTeamId = TeamAway.id
+            WHERE game.homeTeamId = ? OR game.awayTeamId = ?
+            ORDER BY game.date DESC
         `;
-        data = await connection.query(query, [req.params.id, req.params.id]);
+        getGamesForSpecificTeam = await connection.query(query, [req.params.id, req.params.id]);
 
 
         connection.release();
-        res.send(data);
+        res.send(getGamesForSpecificTeam);
     } catch (err) {
         res.status(500);
         res.send({
@@ -176,21 +174,20 @@ router.get("/:id/games", async (req, res) => {
     }
 });
 
-// Returns all trainings for the team with the given id
 
 router.get("/:id/activities", async (req, res) => {
-    let data = {}
+    let activitiesForSpecificTeamData = {}
     try {
         const connection = await pool.getConnection();
         const query = `
-            SELECT Training.id, Training.startDate, Training.stopDate, Team.teamName FROM Training
-            JOIN Team ON Training.TeamId = Team.id
-            WHERE Training.TeamId = ?
-            ORDER BY Training.startDate DESC
+            SELECT training.id, training.startDate, training.stopDate, team.teamName FROM training
+            JOIN team ON training.teamId = team.id
+            WHERE training.teamId = ?
+            ORDER BY training.startDate DESC
         `;
-        data = await connection.query(query, [req.params.id]);
+        activitiesForSpecificTeamData = await connection.query(query, [req.params.id]);
         connection.release();
-        res.send(data);
+        res.send(activitiesForSpecificTeamData);
     } catch (err) {
         res.status(500);
         res.send({
@@ -209,7 +206,7 @@ router.post("/:id/add-news", async (req, res) => {
     try {
         const connection = await pool.getConnection();
         const query = `
-            INSERT INTO News (title, content, published, PersonId, TeamId)
+            INSERT INTO news (title, content, published, personId, teamId)
             VALUES (?, ?, ?, ?, ?)
         `;
 
@@ -217,7 +214,7 @@ router.post("/:id/add-news", async (req, res) => {
 
         console.log(query);
 
-        connection.query(query, [title || "Hej", content || "Hej", published, req.body.PersonId || 1, req.params.id]);
+        connection.query(query, [title || "Hej", content || "Hej", published, req.body.personId || 1, req.params.id]);
         connection.release();
         res.send({
             success: true,
@@ -257,7 +254,7 @@ router.post("/:id/invite", async (req, res) => {
         } else {
             // Add the user to the PlayerTeam table
             const connection = await pool.getConnection();
-            const query = "INSERT INTO TeamPlayer (TeamId, PersonId) VALUES (?, (SELECT id FROM Person WHERE email = ?))";
+            const query = "INSERT INTO teamPlayer (teamId, personId) VALUES (?, (SELECT id FROM person WHERE email = ?))";
 
             connection.query(query, [teamId, email]);
             connection.release();
@@ -272,7 +269,7 @@ async function checkIfUserIsInvited(teamId, email) {
     console.log("teamId: " + teamId);
     console.log("email: " + email);
     const conn = await pool.getConnection();
-    const query = "SELECT * FROM TeamPlayer WHERE TeamId = ? AND PersonId = (SELECT id FROM Person WHERE email = ?)";
+    const query = "SELECT * FROM teamPlayer WHERE teamId = ? AND personId = (SELECT id FROM person WHERE email = ?)";
 
     const user = await conn.query(query, [teamId, email]);
 
@@ -287,7 +284,7 @@ async function checkIfUserIsInvited(teamId, email) {
 async function checkIfUserExist(email) {
 
     const conn = await pool.getConnection();
-    const query = "SELECT * FROM Person WHERE email = ?";
+    const query = "SELECT * FROM person WHERE email = ?";
 
     const user = await conn.query(query, [email]);
 
