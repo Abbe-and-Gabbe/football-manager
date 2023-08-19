@@ -9,23 +9,23 @@ const router = Router();
 router.get("/:id/news", async (req, res) => {
 
     let id = req.params.id;
-    let data = {}
+    let newsForSpecificPersonIdData = {}
     console.log("Get news for person with id: " + id);
     try {
         const connection = await pool.getConnection();
         const query = `
-                        SELECT n.id, n.personId, n.title, n.content, n.published, n.teamId, Person.firstName, Person.lastName FROM News as n
-                        JOIN TeamPlayer ON n.teamId = TeamPlayer.teamId
-                        JOIN TeamStaff ON n.teamId = TeamStaff.teamId
-                        JOIN Person ON n.personId = Person.id
-                        WHERE TeamPlayer.personId = ?
-                        OR TeamStaff.personId = ?
+                        SELECT n.id, n.personId, n.title, n.content, n.published, n.teamId, Person.firstName, Person.lastName FROM news as n
+                        JOIN teamPlayer ON n.teamId = teamPlayer.teamId
+                        JOIN teamStaff ON n.teamId = teamStaff.teamId
+                        JOIN person ON n.personId = person.id
+                        WHERE teamPlayer.personId = ?
+                        OR teamStaff.personId = ?
                         GROUP BY n.id
                         `;
         const news = await connection.query(query, [id, id]);
-        data = news;
+        newsForSpecificPersonIdData = news;
         connection.release();
-        res.send(data);
+        res.send(newsForSpecificPersonIdData);
     } catch (err) {
         res.status(404);
         res.send({
@@ -39,18 +39,18 @@ router.get("/:id/news", async (req, res) => {
 
 router.get("/:id/activites", async (req, res) => {
     let id = req.params.id;
-    let data = {};
+    let activitesForSpecificPersonIdData = {};
     console.log("Get activities for person with id: " + id);
     try {
         const connection = await pool.getConnection();
         const query = `
-                        SELECT id, startDate, stopDate, "Training" as type FROM Training
+                        SELECT id, startDate, stopDate, "training" as type FROM training
                         WHERE teamId IN (
-                            SELECT teamId FROM TeamPlayer
+                            SELECT teamId FROM teamPlayer
                             WHERE personId = ?
                         )
                         OR teamId IN (
-                            SELECT teamId FROM TeamStaff
+                            SELECT teamId FROM teamStaff
                             WHERE personId = ?
                         )
                         ORDER BY startDate DESC
@@ -58,21 +58,21 @@ router.get("/:id/activites", async (req, res) => {
         const activities = await connection.query(query, [id, id]);
 
         const queryGames = `
-                            SELECT id, homeTeam, awayTeam, homeScore, awayScore, date as startDate, "Game" as type FROM Game
-                            WHERE homeTeam IN (
-                                SELECT teamId FROM TeamPlayer
+                            SELECT id, homeTeamId, awayTeamId, homeScoreId, awayScoreId, date as startDate, "game" as type FROM game
+                            WHERE homeTeamId IN (
+                                SELECT teamId FROM teamPlayer
                                 WHERE personId = ?
                             )
-                            OR awayTeam IN (
-                                SELECT teamId FROM TeamPlayer
+                            OR awayTeamId IN (
+                                SELECT teamId FROM teamPlayer
                                 WHERE personId = ?
                             )
-                            OR homeTeam IN (
-                                SELECT teamId FROM TeamStaff
+                            OR homeTeamId IN (
+                                SELECT teamId FROM teamStaff
                                 WHERE personId = ?
                             )
-                            OR awayTeam IN (
-                                SELECT teamId FROM TeamStaff
+                            OR awayTeamId IN (
+                                SELECT teamId FROM teamStaff
                                 WHERE personId = ?
                             )
                             ORDER BY date DESC
@@ -80,7 +80,7 @@ router.get("/:id/activites", async (req, res) => {
 
         const games = await connection.query(queryGames, [id, id, id, id]);
 
-        data = activities.concat(games);
+        activitesForSpecificPersonIdData = activities.concat(games);
 
         // Sort the array by date acsending
         data.sort((a, b) => {
@@ -88,7 +88,7 @@ router.get("/:id/activites", async (req, res) => {
         });
 
         // Only return the 10 latest activities
-        data = data.slice(0, 10);
+        activitesForSpecificPersonIdData = data.slice(0, 10);
 
         // Only show activities where the date is in the future
         // data = data.filter((activity) => {
@@ -96,7 +96,7 @@ router.get("/:id/activites", async (req, res) => {
         // });
 
         connection.release();
-        res.send(data);
+        res.send(activitesForSpecificPersonIdData);
     } catch (err) {
         console.log(err);
         res.status(404);
@@ -108,44 +108,43 @@ router.get("/:id/activites", async (req, res) => {
 });
 
 // Return a person with the given id, the data is joined with the teams
-
 // where the person has a role, both player and staff roles. 
 
 router.get("/:id", async (req, res) => {
-    let data = {}
+    let personConnectedWithATeams = {};
     console.log("Get person with id: " + req.params.id);
     try {
         const connection = await pool.getConnection();
         // Select the person with the id and join PlayerTeam and Team tables
-        const personQuery = "SELECT * FROM Person WHERE id = ?";
+        const personQuery = "SELECT * FROM person WHERE id = ?";
         const person = await connection.query(personQuery, [req.params.id]);
-        data = person[0];
-        data.password = "*********";
+        personConnectedWithATeams = person[0];
+        personConnectedWithATeams.password = "*********";
         // Select the teams the person is in
         const playerTeamsQuery = `
-                SELECT Team.id, Team.teamName, Team.clubId, Club.clubName FROM Team
-                JOIN TeamPlayer ON Team.id = TeamPlayer.teamId
-                JOIN Club ON Team.clubId = Club.id
-                WHERE TeamPlayer.PersonId = ?
+                SELECT team.id, team.teamName, team.clubId, club.clubName FROM team
+                JOIN teamPlayer ON team.id = teamPlayer.teamId
+                JOIN club ON team.clubId = club.id
+                WHERE teamPlayer.personId = ?
                     `;
 
         // Get the teams where the person is a player
         const playerTeams = await connection.query(playerTeamsQuery, [
             req.params.id,
         ]);
-        data.playerTeams = playerTeams;
+        personConnectedWithATeams.playerTeams = playerTeams;
 
         // Get the teams where the person is a staff member
         const staffTeamsQuery = `
-                SELECT Team.id, Team.teamName, Team.clubId, TeamStaff.role, Club.clubName FROM Team
-                JOIN TeamStaff ON Team.id = TeamStaff.teamId
-                JOIN Club ON Team.clubId = Club.id
-                WHERE TeamStaff.PersonId = ?
+                SELECT team.id, team.teamName, team.clubId, teamStaff.role, club.clubName FROM team
+                JOIN teamStaff ON team.id = teamStaff.teamId
+                JOIN club ON team.clubId = club.id
+                WHERE teamStaff.personId = ?
 
                     `
         const staffTeams = await connection.query(staffTeamsQuery, [req.params.id]);
 
-        data.staffTeams = staffTeams;
+        personConnectedWithATeams.staffTeams = staffTeams;
 
         // Get the persons stats from PlayerGame and sum them up
         // plus count the number of games played
@@ -155,17 +154,17 @@ router.get("/:id", async (req, res) => {
         //                     `
 
         const statsQuery = `
-        SELECT PlayerGame.PersonId, SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM PlayerGame
-        WHERE PlayerGame.PersonId = ?
+        SELECT playerGame.personId, SUM(goals) as goals, SUM(assist) as assists, SUM(yellowCard) as yellowCards, SUM(redCard) as redCards FROM playerGame
+        WHERE playerGame.personId = ?
                     `
 
         const stats = await connection.query(statsQuery, [req.params.id]);
-        data.stats = stats[0];
+        personConnectedWithATeams.stats = stats[0];
 
-        console.log(data.stats)
+        console.log(personConnectedWithATeams.stats)
 
         connection.release();
-        res.send(data);
+        res.send(personConnectedWithATeams);
     } catch (err) {
         res.status(404);
         res.send({
@@ -179,19 +178,20 @@ router.get("/:id", async (req, res) => {
 // This will probably only be useful for admins
 
 router.get("/", async (req, res) => {
-    let data = {};
+    let allPersonsData = {};
     console.log("Get all persons");
     try {
         const connection = await pool.getConnection();
-        const query = "SELECT * FROM Person";
+        const query = "SELECT * FROM person";
         const persons = await connection.query(query);
-        data = persons;
+        allPersonsData = persons;
         connection.release();
-        res.send(data);
+        res.send(allPersonsData);
     } catch (err) {
         res.status(500);
         res.send({
             errorCode: "server_error",
+            errorMessage: "Failed to fetch persons from the server."
         });
     }
 
