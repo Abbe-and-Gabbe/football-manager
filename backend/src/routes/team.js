@@ -102,7 +102,7 @@ router.get("/:id/staff", async (req, res) => {
         res.status(500);
         res.send({
             errorCode: "internal_server_error",
-            errorMessage: "Failed to fetch staff or team"
+            errorMessage: "Failed to fetch staff for specific team"
         });
     }
 });
