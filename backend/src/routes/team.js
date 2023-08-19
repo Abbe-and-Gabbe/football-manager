@@ -3,7 +3,6 @@ import { pool } from "../db.js"
 
 const router = Router();
 
-// Get all teams
 router.get("/", async (req, res) => {
     let getAllTeamsData = {};
 
@@ -27,8 +26,6 @@ router.get("/", async (req, res) => {
 });
 
 
-// Returns the team with the given id, the data is joined with the persons
-// connected to the team, players and staff.
 
 router.get("/:id", async (req, res) => {
     let specificTeamData = {};
@@ -58,7 +55,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Returns all the players in the team with the given id
 
 router.get("/:id/players", async (req, res) => {
     let playersForSpecificTeamData = {};
