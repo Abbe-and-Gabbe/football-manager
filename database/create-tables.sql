@@ -3,7 +3,7 @@ CREATE TABLE person (
   firstName VARCHAR(50),
   lastName VARCHAR(50),
   email VARCHAR(254),
-  gender VARCHAR(255),
+  gender VARCHAR(10),
   phoneNumber VARCHAR(15),
   password VARCHAR(255)
 );
@@ -43,6 +43,11 @@ CREATE TABLE playerTraining (
   FOREIGN KEY (personId) REFERENCES person (id),
   FOREIGN KEY (trainingId) REFERENCES training (id)
 );
+CREATE TABLE league (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  leagueName VARCHAR(255),
+  federation VARCHAR(255)
+);
 CREATE TABLE game (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   leagueId INT,
@@ -54,11 +59,6 @@ CREATE TABLE game (
   FOREIGN KEY (leagueId) REFERENCES league (id),
   FOREIGN KEY (homeTeamId) REFERENCES team (id),
   FOREIGN KEY (awayTeamId) REFERENCES team (id)
-);
-CREATE TABLE league (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  leagueName VARCHAR(255),
-  federation VARCHAR(255)
 );
 CREATE TABLE playerGame (
   personId INT,

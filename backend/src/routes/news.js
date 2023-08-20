@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db.js";
+import { verySecretToken } from "./auth.js";
 
 const router = Router();
 
@@ -38,6 +39,15 @@ router.get("/:id", async (req, res) => {
 
 
 router.post("/", async (req, res) => {
+  const authorizationHeaderValue = req.get("Authorization")
+  const accessToken = authorizationHeaderValue.substring(7)
+
+  let isValidJTW = verySecretToken(accessToken)
+
+  if (!isValidJTW) {
+    res.status(401).json({ error: "unauthorized" })
+    return
+  }
   let newsData = req.body;
   try {
     const connection = await pool.getConnection();
