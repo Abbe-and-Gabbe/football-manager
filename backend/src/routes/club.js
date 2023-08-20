@@ -205,7 +205,16 @@ router.get("/:id/activities", async (req, res) => {
 
 
 router.post("/", async (req, res) => {
+  const maxClubNameLength = 20;
   let clubName = req.query.clubName.toString();
+  if (clubName.length > maxClubNameLength || clubName.trim() === "") {
+    res.status(400).json({
+      error: "Invalid clubName",
+      errorMessage: `Club name must not exceed ${maxClubNameLength} characters and must not be empty`,
+    });
+    return;
+  }
+
   try {
     const conn = await pool.getConnection();
     const result = await conn.query("INSERT INTO club (clubName) VALUES (?)", [
@@ -221,4 +230,7 @@ router.post("/", async (req, res) => {
 });
 
 
+
+
 export default router;
+
