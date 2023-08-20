@@ -1,4 +1,6 @@
 <script>
+    import { user } from "../../user-store";
+
     let title = "";
     let content = "";
     export let id;
@@ -6,15 +8,11 @@
     function handleSubmit() {
         console.log(`Submitting article: title=${title}, content=${content}`);
 
-        const data = {
-            title,
-            content,
-        };
-
         const f = fetch(`http://localhost:8080/team/${id}/add-news`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": "Bearer " + $user.JWT,
             },
             body: JSON.stringify({
                 title: title,

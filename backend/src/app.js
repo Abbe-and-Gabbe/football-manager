@@ -22,6 +22,14 @@ app.use(cors({
     origin: "*",
 }));
 
+app.use(function(request, response, next){
+    response.set("Access-Control-Allow-Origin", "*")
+	response.set("Access-Control-Allow-Methods", "*")
+	response.set("Access-Control-Allow-Headers", "*")
+	response.set("Access-Control-Expose-Headers", "*")
+    next()
+})
+
 app.use(express.json())
 
 

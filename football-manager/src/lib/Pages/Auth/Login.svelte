@@ -20,11 +20,14 @@
     }).then((data) => {
       console.log(data);
       $user = {
+        isLoggedIn: true,
         id: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
         JWT: data.JWT
       }
+
+      console.log($user);
 
       // Redircet to home page without losing the user writable
       if($user.id) {

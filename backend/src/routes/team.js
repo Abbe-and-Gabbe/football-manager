@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db.js"
+import { verySecretToken } from "./auth.js";
 
 const router = Router();
 
@@ -194,6 +195,18 @@ router.get("/:id/activities", async (req, res) => {
 });
 
 router.post("/:id/add-news", async (req, res) => {
+    const authorizationHeaderValue = req.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+
+    let isValidJTW = verySecretToken(accessToken)
+
+    if(!isValidJTW){
+        res.status(401).json({error: "unauthorized"})
+        return
+    }
+
+    console.log("POST /team/:id/add-news")
+    console.log(req.body);
     console.log("POST /team/:id/add-news");
 
     const { title, content, personId } = req.body;
@@ -245,6 +258,15 @@ router.post("/:id/add-news", async (req, res) => {
 
 
 router.post("/:id/invite", async (req, res) => {
+    const authorizationHeaderValue = req.get("Authorization")
+	const accessToken = authorizationHeaderValue.substring(7)
+
+    let isValidJTW = verySecretToken(accessToken)
+
+    if(!isValidJTW){
+        res.status(401).json({error: "unauthorized"})
+        return
+    }
     const teamId = req.params.id;
     const { email } = req.body;
 
