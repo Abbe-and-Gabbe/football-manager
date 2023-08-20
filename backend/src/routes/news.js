@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import { pool } from "../db.js";
 import { verySecretToken } from "./auth.js";
@@ -48,88 +49,119 @@ router.post("/", async (req, res) => {
     res.status(401).json({ error: "unauthorized" })
     return
   }
-  let newsData = req.body;
-  try {
-    const connection = await pool.getConnection();
-    const query = `
-      INSERT INTO news (personId, teamId, title, content, published)
-      VALUES (?, ?, ?, ?, ?)
-    `;
-    const result = await connection.query(query, [
-      newsData.personId,
-      newsData.teamId,
-      newsData.title,
-      newsData.content,
-      newsData.published,
-    ]);
-    const newsId = result.insertId;
-    connection.release();
-    res.status(201).json({
-      id: newsId,
-      message: "News article created successfully",
+  const maxTitleLength = 20;
+  const maxContentLength = 100;
+
+  const { personId, teamId, title, content } = req.body;
+
+  if (title.length > maxTitleLength || title.trim() === "") {
+    res.status(400).json({
+      error: "Invalid title",
+      errorMessage: `Title must not exceed ${maxTitleLength} characters and must not be empty`,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      errorCode: "server_error",
-      errorMessage: "Failed to create news article",
+  } else if (content.length > maxContentLength || content.trim() === "") {
+    res.status(400).json({
+      error: "Invalid content",
+      errorMessage: `Content must not exceed ${maxContentLength} characters and must not be empty`,
     });
+  } else {
+    try {
+      const connection = await pool.getConnection();
+      const published = new Date(); // Correctly placed here
+      const query = `
+        INSERT INTO news (personId, teamId, title, content, published)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+      const result = await connection.query(query, [
+        personId,
+        teamId,
+        title,
+        content,
+        published,
+      ]);
+      const newsId = result.insertId;
+      connection.release();
+      res.status(201).json({
+        id: newsId,
+        message: "News article created successfully",
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        errorCode: "server_error",
+        errorMessage: "Failed to create news article",
+      });
+    }
   }
 });
+
 
 
 router.put("/:id", async (req, res) => {
-  let id = req.params.id;
-  let newsData = req.body;
-  console.log(
-    `Edit news article ${id} for person with id: ${newsData.personId}`
-  );
-  try {
-    const connection = await pool.getConnection();
-    const query = `
-                UPDATE news
-                SET teamId = ?, title = ?, content = ?, published = ?
-                WHERE id = ?
-              `;
-    const result = await connection.query(query, [
-      newsData.teamId,
-      newsData.title,
-      newsData.content,
-      newsData.published,
-      id,
-    ]);
-    connection.release();
-    if (result.affectedRows === 0) {
-      res.status(404);
-      res.send({
-        errorCode: "not_found",
-        errorMessage: "News article not found",
-      });
-    } else {
-      const updatedNewsArticle = await getNewsArticleById(id);
-      if (updatedNewsArticle.personId !== newsData.personId) {
-        res.status(403);
+  const id = req.params.id;
+  const newsData = req.body;
+  console.log(`Edit news article ${id} for person with id: ${newsData.personId}`);
+
+  const maxUpdateTitleLength = 20;
+  const maxUpdateContentLength = 100;
+
+  if (newsData.title.length > maxUpdateTitleLength || newsData.title.trim() === "") {
+    res.status(400).json({
+      error: "Invalid title",
+      errorMessage: `Title must not exceed ${maxUpdateTitleLength} characters and must not be empty`,
+    });
+  } else if (newsData.content.length > maxUpdateContentLength || newsData.content.trim() === "") {
+    res.status(400).json({
+      error: "Invalid content",
+      errorMessage: `Content must not exceed ${maxUpdateContentLength} characters and must not be empty`,
+    });
+  } else {
+    try {
+      const connection = await pool.getConnection();
+      const query = `
+        UPDATE news
+        SET teamId = ?, title = ?, content = ?
+        WHERE id = ?
+      `;
+      const result = await connection.query(query, [
+        newsData.teamId,
+        newsData.title,
+        newsData.content,
+        id,
+      ]);
+      connection.release();
+      if (result.affectedRows === 0) {
+        res.status(404);
         res.send({
-          errorCode: "forbidden",
-          errorMessage: "You are not authorized to update this news article",
+          errorCode: "not_found",
+          errorMessage: "News article not found",
         });
       } else {
-        res.send({
-          message: "News article updated successfully",
-        });
+        const updatedNewsArticle = await getNewsArticleById(id);
+        if (updatedNewsArticle.personId !== newsData.personId) {
+          res.status(403);
+          res.send({
+            errorCode: "forbidden",
+            errorMessage: "You are not authorized to update this news article",
+          });
+        } else {
+          res.send({
+            message: "News article updated successfully",
+          });
+        }
       }
+    } catch (err) {
+      console.error(err);
+      res.status(500);
+      res.send({
+        errorCode: "internal_server_error",
+        errorMessage: "Failed to update news article",
+      });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500);
-    res.send({
-      errorCode: "internal_server_error",
-      errorMessage: "Failed to update news article",
-    });
   }
 });
 
-//delete news article
+
 router.delete("/:id", async (req, res) => {
   let id = req.params.id;
   try {

@@ -207,8 +207,28 @@ router.post("/:id/add-news", async (req, res) => {
 
     console.log("POST /team/:id/add-news")
     console.log(req.body);
+    console.log("POST /team/:id/add-news");
 
-    const { title, content } = req.body;
+    const { title, content, personId } = req.body;
+
+    const maxTitleLength = 20;
+    const maxContentLength = 100;
+
+    if (title.length > maxTitleLength || title.trim() === "") {
+        res.status(400).json({
+            error: "Invalid title",
+            errorMessage: `Title must not exceed ${maxTitleLength} characters and must not be empty`,
+        });
+        return;
+    }
+
+    if (content.length > maxContentLength || content.trim() === "") {
+        res.status(400).json({
+            error: "Invalid content",
+            errorMessage: `Content must not exceed ${maxContentLength} characters and must not be empty`,
+        });
+        return;
+    }
 
     try {
         const connection = await pool.getConnection();
@@ -217,24 +237,25 @@ router.post("/:id/add-news", async (req, res) => {
             VALUES (?, ?, ?, ?, ?)
         `;
 
-        const published = new Date()
+        const published = new Date();
 
-        console.log(query);
-
-        connection.query(query, [title || "Hej", content || "Hej", published, req.body.personId || 1, req.params.id]);
+        await connection.query(query, [title, content, published, personId || 1, req.params.id]);
         connection.release();
-        res.send({
+
+        res.status(201).json({
             success: true,
-            message: "News item added"
+            message: "News item added",
         });
     } catch (err) {
-        res.status(500);
-        res.send({
-            errorCode: "not_found",
-            errorMessage: "Team not found"
-        })
+        console.error(err);
+        res.status(500).json({
+            errorCode: "internal_server_error",
+            errorMessage: "Failed to add news item",
+        });
     }
 });
+
+
 
 router.post("/:id/invite", async (req, res) => {
     const authorizationHeaderValue = req.get("Authorization")
